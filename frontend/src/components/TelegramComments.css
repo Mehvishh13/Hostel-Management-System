@@ -1,0 +1,477 @@
+/* components/TelegramComments.css - TELEGRAM STYLE */
+
+.telegram-comments {
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 0;
+  margin-top: 30px;
+}
+
+.comments-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px 12px 0 0;
+  margin: 0;
+}
+
+.comments-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Input Container */
+.telegram-input-container {
+  background: white;
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.telegram-input-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  background: #f8f9fa;
+  border-radius: 20px;
+  padding: 10px 15px;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.telegram-input-wrapper:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.telegram-input-wrapper textarea {
+  flex: 1;
+  border: none;
+  background: transparent;
+  resize: none;
+  font-size: 15px;
+  font-family: inherit;
+  padding: 5px 0;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.telegram-input-wrapper textarea:focus {
+  outline: none;
+}
+
+.send-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.send-button:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background: #e0e0e0;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #666;
+}
+
+.cancel-button:hover {
+  background: #d0d0d0;
+}
+
+/* Messages Container */
+.telegram-messages {
+  background: white;
+  padding: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+  border-radius: 0 0 12px 12px;
+}
+
+.telegram-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.telegram-messages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.telegram-messages::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 10px;
+}
+
+.comment-thread {
+  margin-bottom: 20px;
+}
+
+/* Message Bubble */
+.telegram-message {
+  display: flex;
+  margin-bottom: 12px;
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.telegram-message.own-message {
+  justify-content: flex-end;
+}
+
+.telegram-message.other-message {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 70%;
+  background: white;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.message-bubble:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.own-message .message-bubble {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.other-message .message-bubble {
+  background: #f0f2f5;
+  color: #2c3e50;
+}
+
+/* Message Header */
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.message-author {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.own-message .message-author {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.other-message .message-author {
+  color: #2c3e50;
+}
+
+.role-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.own-message .role-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.badge-student {
+  background: rgba(33, 150, 243, 0.15);
+  color: #1976d2;
+}
+
+.badge-admin {
+  background: rgba(244, 67, 54, 0.15);
+  color: #c62828;
+}
+
+.badge-warden {
+  background: rgba(156, 39, 176, 0.15);
+  color: #7b1fa2;
+}
+
+.own-message .badge-student,
+.own-message .badge-admin,
+.own-message .badge-warden {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.message-time {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* Message Text */
+.message-text {
+  font-size: 15px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  margin-bottom: 8px;
+}
+
+.own-message .message-text {
+  color: white;
+}
+
+.other-message .message-text {
+  color: #2c3e50;
+}
+
+/* Message Actions */
+.message-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.own-message .message-actions {
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+.action-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.own-message .action-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.other-message .action-btn {
+  background: rgba(0, 0, 0, 0.05);
+  color: #666;
+}
+
+.action-btn:hover {
+  transform: scale(1.05);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.own-message .action-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.action-btn.active-like {
+  background: #4CAF50 !important;
+  color: white !important;
+}
+
+.action-btn.active-dislike {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+.delete-btn:hover {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+.show-replies-btn {
+  background: rgba(102, 126, 234, 0.1);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  color: #667eea;
+  transition: all 0.2s ease;
+}
+
+.own-message .show-replies-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.show-replies-btn:hover {
+  background: rgba(102, 126, 234, 0.2);
+  transform: translateX(2px);
+}
+
+/* Reply Container */
+.reply-input-container {
+  margin-left: 40px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.reply-line {
+  width: 3px;
+  background: linear-gradient(to bottom, #667eea, transparent);
+  border-radius: 2px;
+  margin-right: 10px;
+}
+
+.reply-input-wrapper {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 8px 12px;
+  border: 2px solid #e0e0e0;
+}
+
+.reply-input-wrapper textarea {
+  flex: 1;
+  border: none;
+  background: transparent;
+  resize: none;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 4px 0;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.reply-input-wrapper textarea:focus {
+  outline: none;
+}
+
+/* Replies Container */
+.replies-container {
+  margin-left: 40px;
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.replies-list {
+  flex: 1;
+}
+
+.reply-message {
+  margin-bottom: 10px;
+}
+
+.reply-message .message-bubble {
+  max-width: 90%;
+}
+
+/* No Messages */
+.no-messages {
+  text-align: center;
+  padding: 60px 20px;
+  color: #95a5a6;
+}
+
+.no-messages p {
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .message-bubble {
+    max-width: 85%;
+  }
+
+  .reply-message .message-bubble {
+    max-width: 95%;
+  }
+
+  .replies-container,
+  .reply-input-container {
+    margin-left: 20px;
+  }
+
+  .message-actions {
+    gap: 6px;
+  }
+
+  .action-btn {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .telegram-messages {
+    max-height: 400px;
+  }
+}
+
+/* Smooth Animations */
+.message-bubble {
+  animation: bubbleIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bubbleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Selection Colors */
+.own-message ::selection {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.other-message ::selection {
+  background: rgba(102, 126, 234, 0.2);
+}

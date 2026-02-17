@@ -1,0 +1,317 @@
+/* pages/Complaints.css - WITH VOTING DESIGN */
+.complaints-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.complaints-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.complaints-header h1 {
+  color: #2c3e50;
+  font-size: 32px;
+  margin: 0 0 5px 0;
+}
+
+.subtitle {
+  color: #7f8c8d;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Filter and Sort Section */
+.filter-sort-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-section {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.filter-section button {
+  padding: 10px 20px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #7f8c8d;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.filter-section button:hover {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-2px);
+}
+
+.filter-section button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+}
+
+/* Sort Section */
+.sort-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sort-section label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.sort-section select {
+  padding: 8px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.sort-section select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+/* Complaints List */
+.complaints-list {
+  display: grid;
+  gap: 20px;
+}
+
+.complaint-card {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  overflow: hidden;
+  border: 2px solid transparent;
+}
+
+.complaint-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
+}
+
+.complaint-card-header {
+  display: flex;
+  gap: 0;
+}
+
+/* Voting Section in Card */
+.complaint-votes {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 100px;
+}
+
+.vote-icon {
+  font-size: 32px;
+  filter: grayscale(100%) brightness(10);
+}
+
+.vote-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.vote-info strong {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.vote-info span {
+  font-size: 11px;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Main Content */
+.complaint-main-content {
+  flex: 1;
+  padding: 25px;
+}
+
+.complaint-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  gap: 15px;
+}
+
+.complaint-card h3 {
+  color: #2c3e50;
+  font-size: 20px;
+  margin: 0;
+  flex: 1;
+  font-weight: 700;
+}
+
+.complaint-description {
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  font-size: 15px;
+}
+
+.complaint-meta {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.meta-item {
+  color: #2c3e50;
+  font-size: 14px;
+  font-weight: 600;
+  background: #f8f9fa;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.complaint-meta .category {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.complaint-meta .priority {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.complaint-meta .date {
+  color: #95a5a6;
+  font-size: 13px;
+}
+
+.status-badge {
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.no-complaints {
+  background: white;
+  border-radius: 12px;
+  padding: 60px 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-complaints p {
+  color: #7f8c8d;
+  font-size: 18px;
+  margin: 0;
+}
+
+.error-message {
+  background-color: #fee;
+  color: #c00;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #c00;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .complaints-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .filter-sort-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-section {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .sort-section {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .complaint-card-header {
+    flex-direction: column;
+  }
+
+  .complaint-votes {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    padding: 15px;
+  }
+
+  .vote-info {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .complaint-header-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .complaint-meta {
+    font-size: 12px;
+    gap: 10px;
+  }
+}
