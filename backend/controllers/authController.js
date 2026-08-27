@@ -1,11 +1,13 @@
 // controllers/authController.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { jwtSecret, jwtExpiresIn } = require('../config/env');
+const exposeError = require('../utils/exposeError');
 
 // Generate JWT Token
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'your-secret-key', {
-    expiresIn: '30d'
+  return jwt.sign({ id }, jwtSecret, {
+    expiresIn: jwtExpiresIn
   });
 };
 
@@ -14,12 +16,17 @@ const generateToken = (id) => {
 // @access  Public
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role, roomNumber, phoneNumber } = req.body;
+    const { name, email, password, roomNumber, phoneNumber } = req.body;
+
+    // Public self-registration always creates a student. Admin and warden
+    // accounts are provisioned out of band (see seed.js) so that a caller
+    // cannot escalate by passing role in the request body.
+    const role = 'student';
 
     // Validation
     if (!name || !email || !password || !phoneNumber) {
-      return res.status(400).json({ 
-        message: 'Please provide all required fields' 
+      return res.status(400).json({
+        message: 'Please provide all required fields'
       });
     }
 
@@ -87,7 +94,7 @@ exports.register = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Server error during registration. Please try again.',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -139,7 +146,7 @@ exports.login = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Server error during login. Please try again.',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };

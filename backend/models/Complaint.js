@@ -184,4 +184,9 @@ complaintSchema.pre('save', function(next) {
   next();
 });
 
+// Indexes matching the list and filter queries in complaintController.
+complaintSchema.index({ isPublic: 1, voteCount: -1, createdAt: -1 });
+complaintSchema.index({ studentId: 1, createdAt: -1 });
+complaintSchema.index({ status: 1 });
+
 module.exports = mongoose.model('Complaint', complaintSchema);

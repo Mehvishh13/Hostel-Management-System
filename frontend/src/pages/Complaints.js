@@ -1,7 +1,7 @@
 // pages/Complaints.js - WITH VOTING DISPLAY
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import './Complaints.css';
 
@@ -20,7 +20,7 @@ const Complaints = () => {
   const fetchComplaints = async () => {
     try {
       setError('');
-      const res = await axios.get('http://localhost:5000/api/complaints');
+      const res = await api.get('/api/complaints');
       
       const complaintsData = res.data.data || res.data;
       setComplaints(Array.isArray(complaintsData) ? complaintsData : []);

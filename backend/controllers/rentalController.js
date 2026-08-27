@@ -1,5 +1,6 @@
 // controllers/rentalController.js
 const RentalItem = require('../models/RentalItem');
+const exposeError = require('../utils/exposeError');
 
 // @desc    Create rental item
 // @route   POST /api/rentals
@@ -30,7 +31,7 @@ exports.createRentalItem = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error creating rental item',
-      error: error.message
+      error: exposeError(error)
     });
   }
 };
@@ -118,14 +119,31 @@ exports.updateRentalItem = async (req, res) => {
       });
     }
 
-    // Convert category to lowercase if it exists in the update
-    if (req.body.category) {
-      req.body.category = req.body.category.toLowerCase();
+    // Only these fields are client-editable. Anything else in the body
+    // (ownerId, views, ...) is ignored so an owner cannot reassign or
+    // inflate the listing.
+    const EDITABLE_FIELDS = [
+      'title',
+      'description',
+      'category',
+      'pricePerDay',
+      'images',
+      'condition',
+      'available'
+    ];
+
+    const updates = {};
+    for (const field of EDITABLE_FIELDS) {
+      if (req.body[field] !== undefined) updates[field] = req.body[field];
+    }
+
+    if (updates.category) {
+      updates.category = updates.category.toLowerCase();
     }
 
     item = await RentalItem.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updates,
       { new: true, runValidators: true }
     );
 

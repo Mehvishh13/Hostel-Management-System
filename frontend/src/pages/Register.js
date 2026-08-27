@@ -1,7 +1,7 @@
 // pages/Register.js - STUDENTS ONLY (Admin/Warden have fixed credentials)
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api, { setToken } from '../api/client';
 import './Auth.css';
 
 const Register = () => {
@@ -50,18 +50,12 @@ const Register = () => {
 
     try {
       const { confirmPassword, ...userData } = formData;
-      // Always register as student
-      userData.role = 'student';
-      
-      console.log('📤 Sending to server:', userData);
-      
-      const response = await axios.post('http://localhost:5000/api/auth/register', userData);
-      
-      console.log('✅ Registration successful!', response.data);
-      
+      // The server ignores any role sent here and always creates a student.
+
+      const response = await api.post('/api/auth/register', userData);
+
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        setToken(response.data.token);
       }
       
       setSuccess(true);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 import '../pages/Profile.css';
 
 const Profile = () => {
@@ -17,19 +17,14 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
-      const token = localStorage.getItem('token');
       
       // Fetch user info
-      const userResponse = await axios.get('http://localhost:5000/api/auth/me', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const userResponse = await api.get('/api/auth/me');
       setUser(userResponse.data);
 
       // Fetch complaints
       try {
-        const complaintsResponse = await axios.get('http://localhost:5000/api/complaints', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const complaintsResponse = await api.get('/api/complaints');
         // Filter user's complaints
         const userComplaints = complaintsResponse.data.data?.filter(
           c => c.student?._id === userResponse.data._id || c.student === userResponse.data._id
@@ -42,9 +37,7 @@ const Profile = () => {
 
       // Fetch rental items
       try {
-        const itemsResponse = await axios.get('http://localhost:5000/api/rentals', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const itemsResponse = await api.get('/api/rentals');
         // Filter user's items
         const userItems = itemsResponse.data.data?.filter(
           i => i.ownerId?._id === userResponse.data._id || i.ownerId === userResponse.data._id
@@ -57,9 +50,7 @@ const Profile = () => {
 
       // Fetch groups
       try {
-        const groupsResponse = await axios.get('http://localhost:5000/api/groups', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const groupsResponse = await api.get('/api/groups');
         // Filter user's groups
         const userGroups = groupsResponse.data.data?.filter(
           g => g.members?.some(m => (m._id || m) === userResponse.data._id)

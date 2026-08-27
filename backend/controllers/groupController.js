@@ -1,5 +1,6 @@
 // controllers/groupController.js
 const Group = require('../models/Group');
+const exposeError = require('../utils/exposeError');
 
 // @desc    Create group
 // @route   POST /api/groups
@@ -29,7 +30,7 @@ exports.createGroup = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error creating group',
-      error: error.message
+      error: exposeError(error)
     });
   }
 };
@@ -156,9 +157,19 @@ exports.updateGroup = async (req, res) => {
       });
     }
 
+    // Only these fields are client-editable. Membership, admins, creator and
+    // messages are changed through their own endpoints, which carry their own
+    // authorization checks.
+    const EDITABLE_FIELDS = ['name', 'description', 'category', 'image', 'privacy', 'settings'];
+
+    const updates = {};
+    for (const field of EDITABLE_FIELDS) {
+      if (req.body[field] !== undefined) updates[field] = req.body[field];
+    }
+
     const updatedGroup = await Group.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updates,
       { new: true, runValidators: true }
     );
 

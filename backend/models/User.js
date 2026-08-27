@@ -55,4 +55,9 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
+// Indexes for the queries the app actually runs. email already has a unique
+// index from the field definition.
+userSchema.index({ role: 1 });
+userSchema.index({ roomNumber: 1 });
+
 module.exports = mongoose.model('User', userSchema);

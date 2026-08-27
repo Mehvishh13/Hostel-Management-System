@@ -1,6 +1,7 @@
 // middleware/auth.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { jwtSecret } = require('../config/env');
 
 // Verify JWT Token
 exports.protect = async (req, res, next) => {
@@ -15,8 +16,15 @@ exports.protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-    req.user = await User.findById(decoded.id).select('-password');
+    const decoded = jwt.verify(token, jwtSecret);
+    const user = await User.findById(decoded.id).select('-password');
+
+    // The token may reference a user that has since been deleted.
+    if (!user) {
+      return res.status(401).json({ message: 'Not authorized, user no longer exists' });
+    }
+
+    req.user = user;
     next();
   } catch (error) {
     return res.status(401).json({ message: 'Not authorized, token failed' });

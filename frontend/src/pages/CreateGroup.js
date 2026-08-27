@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 
 const CreateGroup = () => {
   const navigate = useNavigate();
@@ -66,10 +66,7 @@ const CreateGroup = () => {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/api/groups', formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.post('/api/groups', formData);
 
       alert('Group created successfully!');
       navigate(`/groups/${response.data.data._id}`);

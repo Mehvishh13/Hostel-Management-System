@@ -1,5 +1,6 @@
 // controllers/complaintController.js
 const Complaint = require('../models/Complaint');
+const exposeError = require('../utils/exposeError');
 
 // @desc    Create a new complaint
 // @route   POST /api/complaints
@@ -33,7 +34,7 @@ exports.createComplaint = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error creating complaint',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -60,7 +61,7 @@ exports.getComplaints = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error fetching complaints',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -114,7 +115,7 @@ exports.getComplaint = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error fetching complaint',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -168,7 +169,7 @@ exports.updateComplaint = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error updating complaint',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -215,7 +216,7 @@ exports.deleteComplaint = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error deleting complaint',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -244,7 +245,7 @@ exports.getComplaintStats = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error fetching statistics',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -299,7 +300,7 @@ exports.voteComplaint = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error voting complaint',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -356,7 +357,7 @@ exports.addComment = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error adding comment',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -414,7 +415,7 @@ exports.deleteComment = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error deleting comment',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -470,7 +471,7 @@ exports.likeComment = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error liking comment',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -526,7 +527,7 @@ exports.dislikeComment = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error disliking comment',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -584,7 +585,7 @@ exports.addReply = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error adding reply',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };
@@ -643,7 +644,7 @@ exports.deleteReply = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Error deleting reply',
-      error: error.message 
+      error: exposeError(error) 
     });
   }
 };

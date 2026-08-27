@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 import '../pages/Marketplace.css';
 
 const MarketplaceDetail = () => {
@@ -17,10 +17,7 @@ const MarketplaceDetail = () => {
 
   const fetchItemDetails = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/rentals/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get(`/api/rentals/${id}`);
       setItem(response.data.data);
       setLoading(false);
     } catch (error) {
@@ -31,10 +28,7 @@ const MarketplaceDetail = () => {
 
   const handleInterest = async () => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/rentals/${id}/interest`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post(`/api/rentals/${id}/interest`, {});
       setShowContactModal(true);
       fetchItemDetails();
     } catch (error) {

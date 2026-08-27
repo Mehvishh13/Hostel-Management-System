@@ -1,7 +1,7 @@
 // pages/AdminDashboard.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -22,7 +22,7 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/complaints');
+      const res = await api.get('/api/complaints');
       const complaints = res.data;
       
       setComplaints(complaints);

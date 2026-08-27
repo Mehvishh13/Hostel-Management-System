@@ -1,7 +1,7 @@
 // pages/CreateComplaint.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 import './CreateComplaint.css';
 
 const CreateComplaint = () => {
@@ -51,7 +51,7 @@ const CreateComplaint = () => {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:5000/api/complaints', formData);
+      await api.post('/api/complaints', formData);
       navigate('/complaints');
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to create complaint');

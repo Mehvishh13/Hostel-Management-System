@@ -1,6 +1,6 @@
 // components/TelegramComments.js - TELEGRAM STYLE WITH REPLIES
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/client';
 import './TelegramComments.css';
 
 const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
@@ -27,7 +27,7 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
     
     setLoading(true);
     try {
-      await axios.post(`http://localhost:5000/api/complaints/${complaintId}/comment`, {
+      await api.post(`/api/complaints/${complaintId}/comment`, {
         comment: newComment
       });
       
@@ -46,8 +46,8 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
     
     setLoading(true);
     try {
-      await axios.post(
-        `http://localhost:5000/api/complaints/${complaintId}/comment/${commentId}/reply`,
+      await api.post(
+        `/api/complaints/${complaintId}/comment/${commentId}/reply`,
         { comment: replyText }
       );
       
@@ -65,10 +65,10 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
   const handleLike = async (commentId, isReply, replyId) => {
     try {
       const url = isReply 
-        ? `http://localhost:5000/api/complaints/${complaintId}/comment/${commentId}/reply/${replyId}/like`
-        : `http://localhost:5000/api/complaints/${complaintId}/comment/${commentId}/like`;
+        ? `/api/complaints/${complaintId}/comment/${commentId}/reply/${replyId}/like`
+        : `/api/complaints/${complaintId}/comment/${commentId}/like`;
       
-      await axios.post(url);
+      await api.post(url);
       onUpdate();
     } catch (error) {
       console.error('Error liking:', error);
@@ -78,10 +78,10 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
   const handleDislike = async (commentId, isReply, replyId) => {
     try {
       const url = isReply 
-        ? `http://localhost:5000/api/complaints/${complaintId}/comment/${commentId}/reply/${replyId}/dislike`
-        : `http://localhost:5000/api/complaints/${complaintId}/comment/${commentId}/dislike`;
+        ? `/api/complaints/${complaintId}/comment/${commentId}/reply/${replyId}/dislike`
+        : `/api/complaints/${complaintId}/comment/${commentId}/dislike`;
       
-      await axios.post(url);
+      await api.post(url);
       onUpdate();
     } catch (error) {
       console.error('Error disliking:', error);
@@ -93,10 +93,10 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
     
     try {
       const url = isReply 
-        ? `http://localhost:5000/api/complaints/${complaintId}/comment/${commentId}/reply/${replyId}`
-        : `http://localhost:5000/api/complaints/${complaintId}/comment/${commentId}`;
+        ? `/api/complaints/${complaintId}/comment/${commentId}/reply/${replyId}`
+        : `/api/complaints/${complaintId}/comment/${commentId}`;
       
-      await axios.delete(url);
+      await api.delete(url);
       onUpdate();
     } catch (error) {
       console.error('Error deleting:', error);

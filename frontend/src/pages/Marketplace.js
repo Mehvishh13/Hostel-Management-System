@@ -1,15 +1,13 @@
 // pages/Marketplace.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+import api from '../api/client';
 import './Marketplace.css';
 
 const Marketplace = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
-  const { user } = useAuth();
 
   useEffect(() => {
     fetchItems();
@@ -18,7 +16,7 @@ const Marketplace = () => {
   const fetchItems = async () => {
     try {
       const params = filter !== 'all' ? { category: filter } : {};
-      const res = await axios.get('http://localhost:5000/api/rentals', { params });
+      const res = await api.get('/api/rentals', { params });
       const itemsData = res.data.data || res.data;
       setItems(Array.isArray(itemsData) ? itemsData : []);
     } catch (error) {

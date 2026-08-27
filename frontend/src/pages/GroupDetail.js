@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 
 const GroupDetail = () => {
   const { id } = useParams();
@@ -21,10 +21,7 @@ const GroupDetail = () => {
 
   const fetchGroupDetails = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/groups/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get(`/api/groups/${id}`);
       setGroup(response.data.data);
       setUserRole(response.data.userRole);
       setLoading(false);
@@ -57,11 +54,9 @@ const GroupDetail = () => {
 
   const handleJoinGroup = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `http://localhost:5000/api/groups/${id}/join`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
+      const response = await api.post(
+        `/api/groups/${id}/join`,
+        {}
       );
       
       if (response.data.pending) {
@@ -79,11 +74,9 @@ const GroupDetail = () => {
 
   const handleCancelRequest = async () => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(
-        `http://localhost:5000/api/groups/${id}/cancel-request`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
+      await api.post(
+        `/api/groups/${id}/cancel-request`,
+        {}
       );
       
       alert('Join request cancelled');
@@ -99,11 +92,9 @@ const GroupDetail = () => {
     if (!newMessage.trim()) return;
 
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(
-        `http://localhost:5000/api/groups/${id}/messages`,
-        { message: newMessage },
-        { headers: { Authorization: `Bearer ${token}` } }
+      await api.post(
+        `/api/groups/${id}/messages`,
+        { message: newMessage }
       );
       
       setNewMessage('');
@@ -118,10 +109,7 @@ const GroupDetail = () => {
     if (!window.confirm('Are you sure you want to leave this group?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/groups/${id}/leave`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post(`/api/groups/${id}/leave`, {});
       
       alert('Successfully left the group');
       navigate('/groups');
@@ -133,10 +121,7 @@ const GroupDetail = () => {
 
   const handleMakeAdmin = async (userId) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/groups/${id}/make-admin/${userId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post(`/api/groups/${id}/make-admin/${userId}`, {});
       
       alert('User promoted to admin');
       fetchGroupDetails();
@@ -150,10 +135,7 @@ const GroupDetail = () => {
     if (!window.confirm('Are you sure you want to remove this member?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/groups/${id}/members/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.delete(`/api/groups/${id}/members/${userId}`);
       
       alert('Member removed');
       fetchGroupDetails();
@@ -165,10 +147,7 @@ const GroupDetail = () => {
 
   const handleApproveRequest = async (userId) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/groups/${id}/approve/${userId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post(`/api/groups/${id}/approve/${userId}`, {});
       
       alert('Request approved');
       fetchGroupDetails();
@@ -180,10 +159,7 @@ const GroupDetail = () => {
 
   const handleRejectRequest = async (userId) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/groups/${id}/reject/${userId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post(`/api/groups/${id}/reject/${userId}`, {});
       
       alert('Request rejected');
       fetchGroupDetails();

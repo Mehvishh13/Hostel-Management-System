@@ -18,20 +18,26 @@ const {
   dislikeReply
 } = require('../controllers/complaintController');
 const { protect, authorize } = require('../middleware/auth');
+const { validate } = require('../middleware/validate');
+const {
+  createComplaintSchema,
+  updateComplaintSchema,
+  commentSchema
+} = require('../middleware/schemas');
 
 const router = express.Router();
 
 // Complaint routes
 router.route('/')
   .get(protect, getComplaints)
-  .post(protect, authorize('student'), createComplaint);
+  .post(protect, authorize('student'), validate(createComplaintSchema), createComplaint);
 
 router.route('/stats/overview')
   .get(protect, authorize('admin', 'warden'), getComplaintStats);
 
 router.route('/:id')
   .get(protect, getComplaint)
-  .put(protect, authorize('admin', 'warden'), updateComplaint)
+  .put(protect, authorize('admin', 'warden'), validate(updateComplaintSchema), updateComplaint)
   .delete(protect, deleteComplaint);
 
 // Vote route
@@ -40,7 +46,7 @@ router.route('/:id/vote')
 
 // Comment routes
 router.route('/:id/comment')
-  .post(protect, addComment);
+  .post(protect, validate(commentSchema), addComment);
 
 router.route('/:id/comment/:commentId')
   .delete(protect, deleteComment);
@@ -53,7 +59,7 @@ router.route('/:id/comment/:commentId/dislike')
 
 // Reply routes
 router.route('/:id/comment/:commentId/reply')
-  .post(protect, addReply);
+  .post(protect, validate(commentSchema), addReply);
 
 router.route('/:id/comment/:commentId/reply/:replyId')
   .delete(protect, deleteReply);

@@ -1,7 +1,7 @@
 // pages/ComplaintDetail.js - WITH TELEGRAM COMMENTS
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import TelegramComments from '../components/TelegramComments';
 import './ComplaintDetail.css';
@@ -30,7 +30,7 @@ const ComplaintDetail = () => {
 
   const fetchComplaint = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/complaints/${id}`);
+      const res = await api.get(`/api/complaints/${id}`);
       const complaintData = res.data.data || res.data;
       setComplaint(complaintData);
       setCanEdit(res.data.canEdit !== undefined ? res.data.canEdit : false);
@@ -57,7 +57,7 @@ const ComplaintDetail = () => {
   const handleVote = async () => {
     setVoting(true);
     try {
-      const res = await axios.post(`http://localhost:5000/api/complaints/${id}/vote`);
+      const res = await api.post(`/api/complaints/${id}/vote`);
       
       setHasVoted(res.data.hasVoted);
       setComplaint(prev => ({
@@ -78,7 +78,7 @@ const ComplaintDetail = () => {
     setUpdating(true);
 
     try {
-      await axios.put(`http://localhost:5000/api/complaints/${id}`, updateForm);
+      await api.put(`/api/complaints/${id}`, updateForm);
       await fetchComplaint();
       setShowUpdateForm(false);
       alert('Complaint updated successfully!');
@@ -92,7 +92,7 @@ const ComplaintDetail = () => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this complaint?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/complaints/${id}`);
+        await api.delete(`/api/complaints/${id}`);
         navigate('/complaints');
       } catch (error) {
         alert('Failed to delete complaint');

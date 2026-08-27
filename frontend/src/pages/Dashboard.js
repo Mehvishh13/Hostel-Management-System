@@ -1,7 +1,7 @@
 // pages/Dashboard.js - FIXED VERSION WITH REAL-TIME DATA
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
@@ -23,7 +23,7 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       // Fetch recent complaints
-      const complaintsRes = await axios.get('http://localhost:5000/api/complaints');
+      const complaintsRes = await api.get('/api/complaints');
       
       // Handle both response formats
       const complaints = complaintsRes.data.data || complaintsRes.data;

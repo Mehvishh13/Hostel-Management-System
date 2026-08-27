@@ -73,4 +73,8 @@ rentalItemSchema.pre('save', function(next) {
   next();
 });
 
+// Indexes matching the category/availability filters in rentalController.
+rentalItemSchema.index({ category: 1, available: 1, createdAt: -1 });
+rentalItemSchema.index({ ownerId: 1 });
+
 module.exports = mongoose.model('RentalItem', rentalItemSchema);

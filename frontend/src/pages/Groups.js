@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/client';
 import '../pages/Groups.css';
 
 const Groups = () => {
@@ -20,10 +20,7 @@ const Groups = () => {
 
   const fetchGroups = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/groups', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/api/groups');
       setAllGroups(response.data.data || []);
       setLoading(false);
     } catch (error) {
@@ -37,10 +34,7 @@ const Groups = () => {
     e.stopPropagation();
     
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(`http://localhost:5000/api/groups/${groupId}/join`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.post(`/api/groups/${groupId}/join`, {});
       
       if (response.data.pending) {
         alert('Join request sent! Waiting for admin approval.');
@@ -60,10 +54,7 @@ const Groups = () => {
     e.stopPropagation();
     
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/groups/${groupId}/cancel-request`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post(`/api/groups/${groupId}/cancel-request`, {});
       
       alert('Join request cancelled');
       fetchGroups();

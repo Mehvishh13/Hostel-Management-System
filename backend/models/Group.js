@@ -100,4 +100,10 @@ groupSchema.pre('save', function(next) {
   next();
 });
 
+// Indexes matching the membership lookups in groupController.
+groupSchema.index({ members: 1 });
+groupSchema.index({ admins: 1 });
+groupSchema.index({ creator: 1 });
+groupSchema.index({ category: 1, privacy: 1 });
+
 module.exports = mongoose.model('Group', groupSchema);
