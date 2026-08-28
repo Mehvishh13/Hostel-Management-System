@@ -36,7 +36,7 @@ const Groups = () => {
     try {
       const response = await api.post(`/api/groups/${groupId}/join`, {});
       
-      if (response.data.pending) {
+      if (response.data.data.pending) {
         alert('Join request sent! Waiting for admin approval.');
       } else {
         alert('Successfully joined the group!');
@@ -233,7 +233,7 @@ const Groups = () => {
                     </span>
                   </div>
                 )}
-                {group.userStatus?.isAdmin && !group.userStatus?.isCreator && (
+                {group.userStatus?.isGroupAdmin && !group.userStatus?.isCreator && (
                   <div style={styles.roleBadge}>
                     <span style={{...styles.badge, background: '#667eea'}}>
                       ⭐ Admin

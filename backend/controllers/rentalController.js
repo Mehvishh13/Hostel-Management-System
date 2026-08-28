@@ -1,6 +1,20 @@
 // controllers/rentalController.js
+// Peer-to-peer rental listings in the marketplace.
 const RentalItem = require('../models/RentalItem');
-const exposeError = require('../utils/exposeError');
+const { ok, created, notFound, forbidden, handleError } = require('../utils/apiResponse');
+
+// Only these fields are client-editable. Anything else in the body
+// (ownerId, views, ...) is ignored so an owner cannot reassign or inflate
+// their listing.
+const EDITABLE_FIELDS = [
+  'title',
+  'description',
+  'category',
+  'pricePerDay',
+  'images',
+  'condition',
+  'available'
+];
 
 // @desc    Create rental item
 // @route   POST /api/rentals
@@ -12,7 +26,7 @@ exports.createRentalItem = async (req, res) => {
     const rentalItem = await RentalItem.create({
       title,
       description,
-      category: category.toLowerCase(), // Convert to lowercase to match enum
+      category: category.toLowerCase(),
       pricePerDay,
       images: images || [],
       condition: condition || 'good',
@@ -22,17 +36,9 @@ exports.createRentalItem = async (req, res) => {
       ownerPhone: req.user.phoneNumber
     });
 
-    res.status(201).json({
-      success: true,
-      data: rentalItem
-    });
+    return created(res, { data: rentalItem, message: 'Rental item created' });
   } catch (error) {
-    console.error('Create Rental Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error creating rental item',
-      error: exposeError(error)
-    });
+    return handleError(res, error, 'Create Rental Error', 'Error creating rental item');
   }
 };
 
@@ -42,26 +48,18 @@ exports.createRentalItem = async (req, res) => {
 exports.getRentalItems = async (req, res) => {
   try {
     const { category, available } = req.query;
-    let query = {};
+    const query = {};
 
-    if (category) query.category = category.toLowerCase(); // Convert to lowercase
+    if (category) query.category = category.toLowerCase();
     if (available !== undefined) query.available = available === 'true';
 
     const items = await RentalItem.find(query)
       .sort({ createdAt: -1 })
       .populate('ownerId', 'name roomNumber');
 
-    res.json({
-      success: true,
-      count: items.length,
-      data: items
-    });
+    return ok(res, { data: items, meta: { count: items.length } });
   } catch (error) {
-    console.error('Get Rentals Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching rental items'
-    });
+    return handleError(res, error, 'Get Rentals Error', 'Error fetching rental items');
   }
 };
 
@@ -70,30 +68,19 @@ exports.getRentalItems = async (req, res) => {
 // @access  Private
 exports.getRentalItem = async (req, res) => {
   try {
-    const item = await RentalItem.findById(req.params.id)
-      .populate('ownerId', 'name roomNumber phoneNumber email');
+    const item = await RentalItem.findById(req.params.id).populate(
+      'ownerId',
+      'name roomNumber phoneNumber email'
+    );
 
-    if (!item) {
-      return res.status(404).json({
-        success: false,
-        message: 'Rental item not found'
-      });
-    }
+    if (!item) return notFound(res, 'Rental item');
 
-    // Increment views
     item.views += 1;
     await item.save();
 
-    res.json({
-      success: true,
-      data: item
-    });
+    return ok(res, { data: item });
   } catch (error) {
-    console.error('Get Rental Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching rental item'
-    });
+    return handleError(res, error, 'Get Rental Error', 'Error fetching rental item');
   }
 };
 
@@ -102,35 +89,13 @@ exports.getRentalItem = async (req, res) => {
 // @access  Private (Owner only)
 exports.updateRentalItem = async (req, res) => {
   try {
-    let item = await RentalItem.findById(req.params.id);
+    const item = await RentalItem.findById(req.params.id);
 
-    if (!item) {
-      return res.status(404).json({
-        success: false,
-        message: 'Rental item not found'
-      });
-    }
+    if (!item) return notFound(res, 'Rental item');
 
-    // Check ownership
     if (item.ownerId.toString() !== req.user._id.toString()) {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to update this item'
-      });
+      return forbidden(res, 'Not authorized to update this item');
     }
-
-    // Only these fields are client-editable. Anything else in the body
-    // (ownerId, views, ...) is ignored so an owner cannot reassign or
-    // inflate the listing.
-    const EDITABLE_FIELDS = [
-      'title',
-      'description',
-      'category',
-      'pricePerDay',
-      'images',
-      'condition',
-      'available'
-    ];
 
     const updates = {};
     for (const field of EDITABLE_FIELDS) {
@@ -141,22 +106,14 @@ exports.updateRentalItem = async (req, res) => {
       updates.category = updates.category.toLowerCase();
     }
 
-    item = await RentalItem.findByIdAndUpdate(
-      req.params.id,
-      updates,
-      { new: true, runValidators: true }
-    );
+    const updated = await RentalItem.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+      runValidators: true
+    });
 
-    res.json({
-      success: true,
-      data: item
-    });
+    return ok(res, { data: updated, message: 'Rental item updated' });
   } catch (error) {
-    console.error('Update Rental Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error updating rental item'
-    });
+    return handleError(res, error, 'Update Rental Error', 'Error updating rental item');
   }
 };
 
@@ -167,55 +124,36 @@ exports.deleteRentalItem = async (req, res) => {
   try {
     const item = await RentalItem.findById(req.params.id);
 
-    if (!item) {
-      return res.status(404).json({
-        success: false,
-        message: 'Rental item not found'
-      });
-    }
+    if (!item) return notFound(res, 'Rental item');
 
-    // Check ownership
     if (item.ownerId.toString() !== req.user._id.toString()) {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to delete this item'
-      });
+      return forbidden(res, 'Not authorized to delete this item');
     }
 
     await item.deleteOne();
 
-    res.json({
-      success: true,
-      message: 'Rental item deleted'
-    });
+    return ok(res, { message: 'Rental item deleted' });
   } catch (error) {
-    console.error('Delete Rental Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error deleting rental item'
-    });
+    return handleError(res, error, 'Delete Rental Error', 'Error deleting rental item');
   }
 };
 
-// @desc    Mark interest in rental item
+// @desc    Toggle interest in a rental item
 // @route   POST /api/rentals/:id/interest
 // @access  Private
 exports.markInterest = async (req, res) => {
   try {
     const item = await RentalItem.findById(req.params.id);
 
-    if (!item) {
-      return res.status(404).json({
-        success: false,
-        message: 'Rental item not found'
-      });
-    }
+    if (!item) return notFound(res, 'Rental item');
 
-    const alreadyInterested = item.interestedUsers.includes(req.user._id);
+    const alreadyInterested = item.interestedUsers.some(
+      (id) => id.toString() === req.user._id.toString()
+    );
 
     if (alreadyInterested) {
       item.interestedUsers = item.interestedUsers.filter(
-        id => id.toString() !== req.user._id.toString()
+        (id) => id.toString() !== req.user._id.toString()
       );
     } else {
       item.interestedUsers.push(req.user._id);
@@ -223,16 +161,10 @@ exports.markInterest = async (req, res) => {
 
     await item.save();
 
-    res.json({
-      success: true,
-      interested: !alreadyInterested,
-      count: item.interestedUsers.length
+    return ok(res, {
+      data: { interested: !alreadyInterested, count: item.interestedUsers.length }
     });
   } catch (error) {
-    console.error('Mark Interest Error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error marking interest'
-    });
+    return handleError(res, error, 'Mark Interest Error', 'Error marking interest');
   }
 };

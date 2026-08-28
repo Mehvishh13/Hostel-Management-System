@@ -11,7 +11,8 @@ exports.registerSchema = z.object({
   name: nonEmpty('name', 100),
   email: z.string().trim().toLowerCase().email('must be a valid email'),
   password: z.string().min(6, 'password must be at least 6 characters').max(128),
-  roomNumber: z.string().trim().max(20).optional(),
+  // Self-registration always creates a student, and students need a room.
+  roomNumber: nonEmpty('roomNumber', 20),
   phoneNumber: z
     .string()
     .trim()

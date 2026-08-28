@@ -23,7 +23,7 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     try {
       const res = await api.get('/api/complaints');
-      const complaints = res.data;
+      const complaints = res.data.data;
       
       setComplaints(complaints);
       

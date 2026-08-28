@@ -23,7 +23,7 @@ const GroupDetail = () => {
     try {
       const response = await api.get(`/api/groups/${id}`);
       setGroup(response.data.data);
-      setUserRole(response.data.userRole);
+      setUserRole(response.data.meta.userStatus);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching group:', error);
@@ -59,7 +59,7 @@ const GroupDetail = () => {
         {}
       );
       
-      if (response.data.pending) {
+      if (response.data.data.pending) {
         alert('Join request sent! Waiting for admin approval.');
       } else {
         alert('Successfully joined the group!');

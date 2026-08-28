@@ -22,7 +22,7 @@ const Complaints = () => {
       setError('');
       const res = await api.get('/api/complaints');
       
-      const complaintsData = res.data.data || res.data;
+      const complaintsData = res.data.data;
       setComplaints(Array.isArray(complaintsData) ? complaintsData : []);
     } catch (error) {
       console.error('Error fetching complaints:', error);

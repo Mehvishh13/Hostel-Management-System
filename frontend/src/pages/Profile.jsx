@@ -20,14 +20,15 @@ const Profile = () => {
       
       // Fetch user info
       const userResponse = await api.get('/api/auth/me');
-      setUser(userResponse.data);
+      const currentUser = userResponse.data.data;
+      setUser(currentUser);
 
       // Fetch complaints
       try {
         const complaintsResponse = await api.get('/api/complaints');
         // Filter user's complaints
         const userComplaints = complaintsResponse.data.data?.filter(
-          c => c.student?._id === userResponse.data._id || c.student === userResponse.data._id
+          c => c.student?._id === currentUser._id || c.student === currentUser._id
         ) || [];
         setComplaints(userComplaints);
       } catch (err) {
@@ -40,7 +41,7 @@ const Profile = () => {
         const itemsResponse = await api.get('/api/rentals');
         // Filter user's items
         const userItems = itemsResponse.data.data?.filter(
-          i => i.ownerId?._id === userResponse.data._id || i.ownerId === userResponse.data._id
+          i => i.ownerId?._id === currentUser._id || i.ownerId === currentUser._id
         ) || [];
         setItems(userItems);
       } catch (err) {
@@ -53,7 +54,7 @@ const Profile = () => {
         const groupsResponse = await api.get('/api/groups');
         // Filter user's groups
         const userGroups = groupsResponse.data.data?.filter(
-          g => g.members?.some(m => (m._id || m) === userResponse.data._id)
+          g => g.members?.some(m => (m._id || m) === currentUser._id)
         ) || [];
         setGroups(userGroups);
       } catch (err) {

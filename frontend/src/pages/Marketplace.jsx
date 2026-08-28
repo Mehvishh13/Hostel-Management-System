@@ -17,7 +17,7 @@ const Marketplace = () => {
     try {
       const params = filter !== 'all' ? { category: filter } : {};
       const res = await api.get('/api/rentals', { params });
-      const itemsData = res.data.data || res.data;
+      const itemsData = res.data.data;
       setItems(Array.isArray(itemsData) ? itemsData : []);
     } catch (error) {
       console.error('Error fetching items:', error);

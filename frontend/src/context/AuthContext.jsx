@@ -26,11 +26,13 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   }, []);
 
-  const storeSession = useCallback((data) => {
-    persistToken(data.token);
-    localStorage.setItem('user', JSON.stringify(data));
-    setTokenState(data.token);
-    setUser(data);
+  // The API returns { user, token }; the user object is what the rest of the
+  // app consumes, and Groups/GroupDetail read it back out of localStorage.
+  const storeSession = useCallback(({ user: nextUser, token: nextToken }) => {
+    persistToken(nextToken);
+    localStorage.setItem('user', JSON.stringify(nextUser));
+    setTokenState(nextToken);
+    setUser(nextUser);
   }, []);
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       try {
         const res = await api.get('/api/auth/me');
-        if (!cancelled) setUser(res.data);
+        if (!cancelled) setUser(res.data.data);
       } catch (error) {
         console.error('Error loading user:', error);
         if (!cancelled) logout();
@@ -63,7 +65,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const res = await api.post('/api/auth/login', { email, password });
-      storeSession(res.data);
+      storeSession(res.data.data);
       return { success: true };
     } catch (error) {
       return {
@@ -76,7 +78,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const res = await api.post('/api/auth/register', userData);
-      storeSession(res.data);
+      storeSession(res.data.data);
       return { success: true };
     } catch (error) {
       return {

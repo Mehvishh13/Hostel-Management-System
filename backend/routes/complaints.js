@@ -1,4 +1,4 @@
-// routes/complaints.js - COMPLETE WITH REPLIES & LIKES
+// routes/complaints.js
 const express = require('express');
 const {
   createComplaint,
@@ -7,16 +7,20 @@ const {
   updateComplaint,
   deleteComplaint,
   getComplaintStats,
-  voteComplaint,
+  voteComplaint
+} = require('../controllers/complaint/complaintController');
+const {
   addComment,
   deleteComment,
   likeComment,
-  dislikeComment,
+  dislikeComment
+} = require('../controllers/complaint/commentController');
+const {
   addReply,
   deleteReply,
   likeReply,
   dislikeReply
-} = require('../controllers/complaintController');
+} = require('../controllers/complaint/replyController');
 const { protect, authorize } = require('../middleware/auth');
 const { validate } = require('../middleware/validate');
 const {
@@ -27,7 +31,7 @@ const {
 
 const router = express.Router();
 
-// Complaint routes
+// Complaints
 router.route('/')
   .get(protect, getComplaints)
   .post(protect, authorize('student'), validate(createComplaintSchema), createComplaint);
@@ -40,11 +44,10 @@ router.route('/:id')
   .put(protect, authorize('admin', 'warden'), validate(updateComplaintSchema), updateComplaint)
   .delete(protect, deleteComplaint);
 
-// Vote route
 router.route('/:id/vote')
   .post(protect, voteComplaint);
 
-// Comment routes
+// Comments
 router.route('/:id/comment')
   .post(protect, validate(commentSchema), addComment);
 
@@ -57,7 +60,7 @@ router.route('/:id/comment/:commentId/like')
 router.route('/:id/comment/:commentId/dislike')
   .post(protect, dislikeComment);
 
-// Reply routes
+// Replies
 router.route('/:id/comment/:commentId/reply')
   .post(protect, validate(commentSchema), addReply);
 

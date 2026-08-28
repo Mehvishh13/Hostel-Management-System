@@ -1,7 +1,7 @@
 // pages/Register.js - STUDENTS ONLY (Admin/Warden have fixed credentials)
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api, { setToken } from '../api/client';
+import api, { setToken, API_BASE_URL } from '../api/client';
 import './Auth.css';
 
 const Register = () => {
@@ -54,8 +54,8 @@ const Register = () => {
 
       const response = await api.post('/api/auth/register', userData);
 
-      if (response.data.token) {
-        setToken(response.data.token);
+      if (response.data.data.token) {
+        setToken(response.data.data.token);
       }
       
       setSuccess(true);
@@ -70,7 +70,7 @@ const Register = () => {
       if (err.response) {
         setError(err.response.data.message || 'Registration failed');
       } else if (err.request) {
-        setError('Cannot connect to server. Make sure backend is running on port 5000.');
+        setError(`Cannot connect to the server at ${API_BASE_URL}. Make sure the backend is running.`);
       } else {
         setError('An error occurred. Please try again.');
       }

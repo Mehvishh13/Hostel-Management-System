@@ -1,4 +1,4 @@
-// routes/groupRoutes.js
+// routes/groups.js
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/auth');
@@ -13,18 +13,20 @@ const {
   getGroups,
   getGroup,
   updateGroup,
-  deleteGroup,
+  deleteGroup
+} = require('../controllers/group/groupController');
+const {
   joinGroup,
-  cancelRequest,  // NEW
+  cancelRequest,
   leaveGroup,
   makeAdmin,
   removeMember,
-  addMessage,
   approveRequest,
-  rejectRequest   // NEW
-} = require('../controllers/groupController');
+  rejectRequest
+} = require('../controllers/group/membershipController');
+const { addMessage } = require('../controllers/group/messageController');
 
-// Public group routes (all students can see)
+// Browsing
 router.get('/', protect, getGroups);
 router.get('/:id', protect, getGroup);
 
@@ -33,16 +35,16 @@ router.post('/', protect, validate(createGroupSchema), createGroup);
 router.put('/:id', protect, validate(updateGroupSchema), updateGroup);
 router.delete('/:id', protect, deleteGroup);
 
-// Join/Leave functionality
+// Membership
 router.post('/:id/join', protect, joinGroup);
-router.post('/:id/cancel-request', protect, cancelRequest); // NEW - Cancel join request
+router.post('/:id/cancel-request', protect, cancelRequest);
 router.post('/:id/leave', protect, leaveGroup);
 
-// Admin actions
+// Group-admin actions
 router.post('/:id/make-admin/:userId', protect, makeAdmin);
 router.delete('/:id/members/:userId', protect, removeMember);
 router.post('/:id/approve/:userId', protect, approveRequest);
-router.post('/:id/reject/:userId', protect, rejectRequest); // NEW - Reject request
+router.post('/:id/reject/:userId', protect, rejectRequest);
 
 // Messages
 router.post('/:id/messages', protect, validate(groupMessageSchema), addMessage);

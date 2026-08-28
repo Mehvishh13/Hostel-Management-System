@@ -31,9 +31,9 @@ const ComplaintDetail = () => {
   const fetchComplaint = async () => {
     try {
       const res = await api.get(`/api/complaints/${id}`);
-      const complaintData = res.data.data || res.data;
+      const complaintData = res.data.data;
       setComplaint(complaintData);
-      setCanEdit(res.data.canEdit !== undefined ? res.data.canEdit : false);
+      setCanEdit(res.data.meta?.canEdit === true);
       setUpdateForm({
         status: complaintData.status,
         adminNotes: complaintData.adminNotes || '',
@@ -59,10 +59,10 @@ const ComplaintDetail = () => {
     try {
       const res = await api.post(`/api/complaints/${id}/vote`);
       
-      setHasVoted(res.data.hasVoted);
+      setHasVoted(res.data.data.hasVoted);
       setComplaint(prev => ({
         ...prev,
-        voteCount: res.data.voteCount
+        voteCount: res.data.data.voteCount
       }));
       
     } catch (error) {

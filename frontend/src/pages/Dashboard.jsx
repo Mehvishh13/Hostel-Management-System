@@ -26,7 +26,7 @@ const Dashboard = () => {
       const complaintsRes = await api.get('/api/complaints');
       
       // Handle both response formats
-      const complaints = complaintsRes.data.data || complaintsRes.data;
+      const complaints = complaintsRes.data.data;
       const complaintsArray = Array.isArray(complaints) ? complaints : [];
       
       setRecentComplaints(complaintsArray.slice(0, 5));
