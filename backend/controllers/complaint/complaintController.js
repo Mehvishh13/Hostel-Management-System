@@ -37,7 +37,25 @@ exports.getComplaints = async (req, res) => {
       .populate('resolvedBy', 'name')
       .sort({ voteCount: -1, createdAt: -1 });
 
-    return ok(res, { data: complaints, meta: { count: complaints.length } });
+    const isPrivileged = req.user.role !== 'student';
+
+    // Students see other students' complaints with identity limited to a name —
+    // room/email are only for the complaint owner and staff who need to act on it.
+    const data = complaints.map((complaint) => {
+      const obj = complaint.toObject();
+      const isOwner = complaint.studentId?._id?.toString() === req.user._id.toString();
+
+      if (!isPrivileged && !isOwner) {
+        obj.studentId = complaint.studentId
+          ? { _id: complaint.studentId._id, name: complaint.studentId.name }
+          : null;
+        delete obj.roomNumber;
+      }
+
+      return obj;
+    });
+
+    return ok(res, { data, meta: { count: data.length } });
   } catch (error) {
     return handleError(res, error, 'Get Complaints Error', 'Error fetching complaints');
   }
@@ -63,6 +81,7 @@ exports.getComplaint = async (req, res) => {
         _id: complaint.studentId._id,
         name: complaint.studentId.name
       };
+      delete complaintData.roomNumber;
     }
 
     return ok(res, {

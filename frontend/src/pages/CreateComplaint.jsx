@@ -25,9 +25,9 @@ const CreateComplaint = () => {
   ];
 
   const priorities = [
-    { value: 'low', label: 'Low', color: '#27ae60' },
-    { value: 'medium', label: 'Medium', color: '#f39c12' },
-    { value: 'high', label: 'High', color: '#e74c3c' }
+    { value: 'low', label: 'Low', color: 'var(--resolved-green)' },
+    { value: 'medium', label: 'Medium', color: 'var(--twine)' },
+    { value: 'high', label: 'High', color: 'var(--pin-red)' }
   ];
 
   const handleChange = (e) => {
@@ -108,13 +108,10 @@ const CreateComplaint = () => {
             <label>Priority *</label>
             <div className="priority-options">
               {priorities.map(p => (
-                <label 
-                  key={p.value} 
+                <label
+                  key={p.value}
                   className={`priority-option ${formData.priority === p.value ? 'selected' : ''}`}
-                  style={{ 
-                    borderColor: formData.priority === p.value ? p.color : '#ddd',
-                    backgroundColor: formData.priority === p.value ? p.color + '20' : 'white'
-                  }}
+                  style={formData.priority === p.value ? { borderColor: p.color } : undefined}
                 >
                   <input
                     type="radio"

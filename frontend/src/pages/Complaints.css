@@ -1,36 +1,47 @@
-/* pages/Complaints.css - WITH VOTING DESIGN */
+/* pages/Complaints.css — The Notice Board
+   Scoped under .complaints-container to avoid colliding with same-named
+   classes in other pages' global CSS files (this app has no CSS modules). */
+
 .complaints-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 30px 20px;
+  min-height: calc(100vh - 66px);
+  background: var(--page-bg);
+  color: var(--ink);
+  padding: 32px 0 64px;
 }
 
-.complaints-header {
+.complaints-container .container {
+  max-width: 1100px;
+}
+
+.complaints-container .complaints-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
 }
 
-.complaints-header h1 {
-  color: #2c3e50;
-  font-size: 32px;
-  margin: 0 0 5px 0;
+.complaints-container .complaints-header h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--ink);
+  font-size: 26px;
+  margin: 0 0 6px 0;
 }
 
-.subtitle {
-  color: #7f8c8d;
-  font-size: 16px;
+.complaints-container .subtitle {
+  color: var(--ink-dim);
+  font-size: 15px;
   margin: 0;
 }
 
-/* Filter and Sort Section */
-.filter-sort-section {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+/* Filter and Sort Section — flat operate toolbar, no pin/rotate */
+.complaints-container .filter-sort-section {
+  background: var(--paper);
+  border: 1px solid var(--paper-line);
+  padding: 16px 18px;
+  margin-bottom: 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,280 +49,285 @@
   flex-wrap: wrap;
 }
 
-.filter-section {
+.complaints-container .filter-section {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
   flex: 1;
 }
 
-.filter-section button {
-  padding: 10px 20px;
-  border: 2px solid #e0e0e0;
-  background: white;
-  border-radius: 8px;
+.complaints-container .filter-section button {
+  padding: 8px 14px;
+  border: 1.5px solid var(--paper-line);
+  background: transparent;
   cursor: pointer;
   font-weight: 600;
-  color: #7f8c8d;
-  transition: all 0.3s ease;
-  font-size: 14px;
+  color: var(--ink-dim);
+  transition: border-color 0.15s ease, color 0.15s ease;
+  font-size: 13px;
+  font-family: var(--font-body);
 }
 
-.filter-section button:hover {
-  border-color: #667eea;
-  color: #667eea;
-  transform: translateY(-2px);
+.complaints-container .filter-section button:hover {
+  border-color: var(--ink-faint);
+  color: var(--ink);
 }
 
-.filter-section button.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-color: transparent;
+.complaints-container .filter-section button.active {
+  background: var(--pin-red);
+  color: var(--paper);
+  border-color: var(--pin-red);
 }
 
 /* Sort Section */
-.sort-section {
+.complaints-container .sort-section {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.sort-section label {
+.complaints-container .sort-section label {
   font-weight: 600;
-  color: #2c3e50;
-  font-size: 14px;
+  color: var(--ink);
+  font-size: 13px;
 }
 
-.sort-section select {
-  padding: 8px 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
+.complaints-container .sort-section select {
+  padding: 7px 12px;
+  border: 1.5px solid var(--paper-line);
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  background: white;
+  transition: border-color 0.15s ease;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
 }
 
-.sort-section select:focus {
+.complaints-container .sort-section select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--pin-red);
 }
 
-/* Complaints List */
-.complaints-list {
+/* Complaints List — pinned notice cards */
+.complaints-container .complaints-list {
   display: grid;
-  gap: 20px;
+  gap: 22px;
 }
 
-.complaint-card {
-  background: white;
-  border-radius: 12px;
-  padding: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+.complaints-container .card {
+  position: relative;
+  background: var(--paper);
+  box-shadow: 0 10px 18px -6px rgba(20, 12, 4, 0.4), 0 2px 0 rgba(255, 255, 255, 0.4) inset;
   text-decoration: none;
   color: inherit;
+}
+
+.complaints-container .card::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e6584a, var(--pin-red) 55%, var(--pin-red-deep) 100%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5), 0 3px 4px rgba(0, 0, 0, 0.25);
+}
+
+.complaints-container .complaint-card {
   display: block;
-  overflow: hidden;
-  border: 2px solid transparent;
 }
 
-.complaint-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-  border-color: #667eea;
-}
+.complaints-container .complaints-list .complaint-card:nth-child(3n + 1) { transform: rotate(-0.5deg); }
+.complaints-container .complaints-list .complaint-card:nth-child(3n + 2) { transform: rotate(0.6deg); }
+.complaints-container .complaints-list .complaint-card:nth-child(3n + 3) { transform: rotate(-0.3deg); }
 
-.complaint-card-header {
+.complaints-container .complaint-card-header {
   display: flex;
   gap: 0;
 }
 
-/* Voting Section in Card */
-.complaint-votes {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 25px 20px;
+/* Voting */
+.complaints-container .complaint-votes {
+  padding: 22px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  min-width: 100px;
+  gap: 2px;
+  min-width: 92px;
+  border-right: 1px dashed var(--paper-line);
 }
 
-.vote-icon {
-  font-size: 32px;
-  filter: grayscale(100%) brightness(10);
-}
-
-.vote-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-}
-
-.vote-info strong {
-  font-size: 24px;
-  font-weight: 700;
+.complaints-container .complaint-votes strong {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 600;
   line-height: 1;
+  color: var(--pin-red);
+  font-variant-numeric: tabular-nums;
 }
 
-.vote-info span {
+.complaints-container .complaint-votes span {
   font-size: 11px;
-  opacity: 0.9;
+  color: var(--ink-dim);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.06em;
+  margin-top: 4px;
 }
 
 /* Main Content */
-.complaint-main-content {
+.complaints-container .complaint-main-content {
   flex: 1;
-  padding: 25px;
+  padding: 20px 22px;
+  min-width: 0;
 }
 
-.complaint-header-row {
+.complaints-container .complaint-header-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   gap: 15px;
 }
 
-.complaint-card h3 {
-  color: #2c3e50;
-  font-size: 20px;
+.complaints-container .complaint-card h3 {
+  color: var(--ink);
+  font-size: 17px;
   margin: 0;
   flex: 1;
-  font-weight: 700;
+  font-weight: 600;
 }
 
-.complaint-description {
-  color: #7f8c8d;
+.complaints-container .complaint-description {
+  color: var(--ink-dim);
   line-height: 1.6;
-  margin-bottom: 15px;
-  font-size: 15px;
-}
-
-.complaint-meta {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.meta-item {
-  color: #2c3e50;
+  margin-bottom: 14px;
   font-size: 14px;
-  font-weight: 600;
-  background: #f8f9fa;
-  padding: 6px 12px;
-  border-radius: 6px;
 }
 
-.complaint-meta .category {
-  background: #e3f2fd;
-  color: #1976d2;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
+.complaints-container .complaint-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+
+.complaints-container .meta-item {
+  color: var(--ink-dim);
+}
+
+.complaints-container .tag-label {
+  color: var(--ink-dim);
   text-transform: capitalize;
 }
 
-.complaint-meta .priority {
-  font-size: 13px;
+.complaints-container .sep {
+  opacity: 0.5;
+}
+
+.complaints-container .priority {
   font-weight: 600;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
-.complaint-meta .date {
-  color: #95a5a6;
-  font-size: 13px;
+.complaints-container .priority--low { color: var(--ink-dim); }
+.complaints-container .priority--medium { color: var(--twine); }
+.complaints-container .priority--high { color: var(--pin-red); }
+
+.complaints-container .date {
+  color: var(--ink-faint);
 }
 
-.status-badge {
-  color: white;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: capitalize;
+.complaints-container .stamp {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  transform: rotate(-3deg);
   display: inline-block;
   white-space: nowrap;
 }
 
-.no-complaints {
-  background: white;
-  border-radius: 12px;
+.complaints-container .stamp--pending { color: var(--ink-dim); }
+.complaints-container .stamp--progress { color: var(--twine); }
+.complaints-container .stamp--resolved { color: var(--resolved-green); }
+.complaints-container .stamp--rejected { color: var(--pin-red); }
+
+.complaints-container .no-complaints {
   padding: 60px 20px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: none;
 }
 
-.no-complaints p {
-  color: #7f8c8d;
-  font-size: 18px;
+.complaints-container .no-complaints p {
+  color: var(--ink-dim);
+  font-size: 16px;
   margin: 0;
 }
 
-.error-message {
-  background-color: #fee;
-  color: #c00;
+.complaints-container .error-message {
+  background-color: var(--paper);
+  color: var(--pin-red);
   padding: 15px 20px;
-  border-radius: 8px;
+  border: 1px solid var(--pin-red);
   margin-bottom: 20px;
-  border-left: 4px solid #c00;
   font-size: 14px;
   font-weight: 500;
 }
 
 @media (max-width: 768px) {
-  .complaints-header {
+  .complaints-container .complaints-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
   }
 
-  .filter-sort-section {
+  .complaints-container .filter-sort-section {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .filter-section {
+  .complaints-container .filter-section {
     width: 100%;
     justify-content: flex-start;
   }
 
-  .sort-section {
+  .complaints-container .sort-section {
     width: 100%;
     justify-content: space-between;
   }
 
-  .complaint-card-header {
+  .complaints-container .complaint-card-header {
     flex-direction: column;
   }
 
-  .complaint-votes {
+  .complaints-container .complaint-votes {
     flex-direction: row;
     width: 100%;
     justify-content: center;
-    padding: 15px;
-  }
-
-  .vote-info {
-    flex-direction: row;
+    padding: 12px;
+    border-right: none;
+    border-bottom: 1px dashed var(--paper-line);
     gap: 8px;
   }
 
-  .complaint-header-row {
+  .complaints-container .complaint-header-row {
     flex-direction: column;
     gap: 10px;
   }
 
-  .complaint-meta {
-    font-size: 12px;
-    gap: 10px;
+  .complaints-container .complaint-meta {
+    font-size: 10px;
+    gap: 5px;
   }
 }

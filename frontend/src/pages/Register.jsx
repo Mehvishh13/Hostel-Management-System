@@ -87,13 +87,13 @@ const Register = () => {
         
         {error && (
           <div className="error-message">
-            ❌ {error}
+            {error}
           </div>
         )}
-        
+
         {success && (
           <div className="success-message">
-            ✅ Registration successful! Redirecting to login...
+            Registration successful! Redirecting to login...
           </div>
         )}
         
@@ -171,12 +171,12 @@ const Register = () => {
           </div>
 
           <button type="submit" disabled={loading || success} className="btn-primary">
-            {loading ? 'Registering...' : success ? 'Success! ✅' : 'Register'}
+            {loading ? 'Registering...' : success ? 'Success!' : 'Register'}
           </button>
         </form>
 
         <div className="admin-info-box">
-          <p><strong>👨‍💼 Admin/Warden?</strong></p>
+          <p><strong>Admin/Warden?</strong></p>
           <p>Use your credentials to login directly. No registration needed.</p>
         </div>
 

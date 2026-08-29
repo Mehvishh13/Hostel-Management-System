@@ -1,0 +1,246 @@
+/* pages/CreateGroup.css — The Notice Board
+   Every rule scoped under .create-group-container: page stylesheets here are
+   plain global CSS (no modules), so a bare generic class name can silently
+   collide with the same class name in another page's CSS depending on
+   import order — see DESIGN.md.
+
+   Form page = dense/operate context: flat --page-bg ground, no cork
+   texture, flat unrotated paper panel with hairline --paper-line dividers,
+   inputs as bottom-hairline only. */
+
+.create-group-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+  background: var(--page-bg);
+  min-height: calc(100vh - 66px);
+}
+
+.create-group-container .create-group-card {
+  background: var(--paper);
+  padding: 32px;
+  border: 1px solid var(--paper-line);
+}
+
+.create-group-container .create-group-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.create-group-container .error-message {
+  background: transparent;
+  color: var(--pin-red);
+  padding: 10px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px dashed var(--pin-red);
+  font-size: 13.5px;
+}
+
+.create-group-container .create-group-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.create-group-container .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.create-group-container .form-group label {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.create-group-container .form-group input[type='text'],
+.create-group-container .form-group select,
+.create-group-container .form-group textarea {
+  width: 100%;
+  padding: 10px 2px;
+  border: none;
+  border-bottom: 1.5px solid var(--paper-line);
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  font-family: var(--font-body);
+  transition: border-color 0.15s ease;
+}
+
+.create-group-container .form-group input[type='text']:focus,
+.create-group-container .form-group select:focus,
+.create-group-container .form-group textarea:focus {
+  outline: none;
+  border-bottom-color: var(--pin-red);
+  box-shadow: var(--focus-ring);
+}
+
+.create-group-container .form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.create-group-container .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.create-group-container .file-input {
+  padding: 10px 0;
+  border: none;
+  border-bottom: 1.5px dashed var(--paper-line);
+  background: transparent;
+  color: var(--ink-dim);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.create-group-container .image-preview {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.create-group-container .image-preview .preview-img {
+  max-width: 100%;
+  max-height: 200px;
+  margin-bottom: 10px;
+}
+
+.create-group-container .remove-image-btn {
+  padding: 7px 14px;
+  background: transparent;
+  color: var(--pin-red);
+  border: 1.5px solid var(--pin-red);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.create-group-container .remove-image-btn:hover {
+  background: var(--pin-red);
+  color: var(--paper);
+}
+
+.create-group-container .advanced-section {
+  margin-top: 8px;
+  padding: 18px 18px 4px;
+  border-top: 1px solid var(--paper-line);
+}
+
+.create-group-container .advanced-section-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.create-group-container .checkbox-group {
+  margin-bottom: 16px;
+}
+
+.create-group-container .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.create-group-container .checkbox-input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--pin-red);
+  cursor: pointer;
+}
+
+.create-group-container .checkbox-hint {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  margin-left: 27px;
+  margin-top: 4px;
+}
+
+.create-group-container .button-group {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.create-group-container .cancel-btn {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--paper-line);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.create-group-container .cancel-btn:hover {
+  border-color: var(--ink-faint);
+}
+
+.create-group-container .pin-btn {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--paper);
+  background: var(--pin-red);
+  border: none;
+  padding: 12px 18px;
+  box-shadow: 0 4px 0 var(--pin-red-deep), 0 6px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.create-group-container .pin-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--pin-red-deep), 0 9px 14px rgba(0, 0, 0, 0.35);
+}
+
+.create-group-container .pin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 640px) {
+  .create-group-container .create-group-card {
+    padding: 22px 18px;
+  }
+
+  .create-group-container .create-group-title {
+    font-size: 20px;
+  }
+
+  .create-group-container .form-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .create-group-container .button-group {
+    flex-direction: column;
+  }
+}

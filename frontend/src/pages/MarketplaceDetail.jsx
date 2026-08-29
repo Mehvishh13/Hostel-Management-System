@@ -59,7 +59,7 @@ const MarketplaceDetail = () => {
   return (
     <div className="marketplace-container">
       <button onClick={() => navigate('/marketplace')} style={styles.backBtn}>
-        ← Back to Marketplace
+        ← Back to marketplace
       </button>
 
       <div style={styles.detailContainer}>
@@ -67,8 +67,8 @@ const MarketplaceDetail = () => {
           <div style={styles.mainImage}>
             {item.images && item.images.length > 0 ? (
               <>
-                <img 
-                  src={item.images[currentImageIndex]} 
+                <img
+                  src={item.images[currentImageIndex]}
                   alt={item.title}
                   style={styles.image}
                 />
@@ -80,10 +80,10 @@ const MarketplaceDetail = () => {
                 )}
               </>
             ) : (
-              <div className="no-image">📦</div>
+              <div className="no-image">No photo</div>
             )}
           </div>
-          
+
           {item.images && item.images.length > 1 && (
             <div style={styles.thumbnails}>
               {item.images.map((img, index) => (
@@ -93,7 +93,7 @@ const MarketplaceDetail = () => {
                   alt={`Thumbnail ${index + 1}`}
                   style={{
                     ...styles.thumbnail,
-                    border: currentImageIndex === index ? '3px solid #667eea' : '2px solid #ddd'
+                    border: currentImageIndex === index ? '3px solid var(--pin-red)' : '2px solid var(--paper-line)'
                   }}
                   onClick={() => setCurrentImageIndex(index)}
                 />
@@ -105,43 +105,46 @@ const MarketplaceDetail = () => {
         <div style={styles.infoSection}>
           <div style={styles.header}>
             <h1 style={styles.title}>{item.title}</h1>
-            <span className="item-condition" style={{fontSize: '14px', textTransform: 'capitalize'}}>
+            <span style={{fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--twine)', fontWeight: 600}}>
               {item.condition}
             </span>
           </div>
 
+          <span style={{...styles.listingTypeBadge, ...(item.listingType === 'sale' ? styles.listingTypeBadgeSale : styles.listingTypeBadgeRent)}}>
+            {item.listingType === 'sale' ? 'For sale' : 'For rent'}
+          </span>
+
           <div style={styles.priceSection}>
-            <span style={styles.price}>₹{item.pricePerDay}</span>
-            <span style={styles.period}>/day</span>
+            <span style={styles.price}>₹{item.price}</span>
+            {item.listingType !== 'sale' && <span style={styles.period}>/day</span>}
           </div>
 
           <div style={styles.category}>
-            📂 Category: <strong>{item.category}</strong>
+            Category <strong style={{color: 'var(--ink)'}}>{item.category}</strong>
           </div>
 
           <div style={styles.description}>
-            <h3>Description</h3>
+            <h3 style={styles.sectionHeading}>Description</h3>
             <p>{item.description}</p>
           </div>
 
           <div style={styles.availability}>
-            <strong>Status:</strong> {item.available ? '✅ Available' : '❌ Not Available'}
+            <strong>Status:</strong> {item.available ? 'Available' : 'Not available'}
           </div>
 
           <div style={styles.views}>
-            👁️ {item.views || 0} views
+            {item.views || 0} views
           </div>
 
           <div style={styles.ownerSection}>
-            <h3>Owner Information</h3>
+            <h3 style={styles.sectionHeading}>Owner information</h3>
             <p><strong>Name:</strong> {item.ownerName || item.ownerId?.name}</p>
             <p><strong>Room:</strong> {item.ownerRoom || item.ownerId?.roomNumber}</p>
-            <p><strong>Phone:</strong> {showContactModal ? (item.ownerPhone || item.ownerId?.phoneNumber) : '***-***-****'}</p>
           </div>
 
           {item.available && (
             <button onClick={handleInterest} style={styles.interestBtn}>
-              💬 I'm Interested
+              I'm interested
             </button>
           )}
         </div>
@@ -150,10 +153,8 @@ const MarketplaceDetail = () => {
       {showContactModal && (
         <div style={styles.modal} onClick={() => setShowContactModal(false)}>
           <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <h2>Contact Owner</h2>
-            <p><strong>Name:</strong> {item.ownerName || item.ownerId?.name}</p>
-            <p><strong>Phone:</strong> {item.ownerPhone || item.ownerId?.phoneNumber}</p>
-            <p><strong>Room:</strong> {item.ownerRoom || item.ownerId?.roomNumber}</p>
+            <h2 style={styles.sectionHeading}>Interest sent</h2>
+            <p>{item.ownerName || item.ownerId?.name} has been notified. Coordinate the rental in person or via the room number listed on this page.</p>
             <button onClick={() => setShowContactModal(false)} style={styles.closeBtn}>
               Close
             </button>
@@ -166,36 +167,37 @@ const MarketplaceDetail = () => {
 
 const styles = {
   backBtn: {
-    padding: '10px 20px',
-    background: '#667eea',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
+    padding: '10px 18px',
+    background: 'transparent',
+    color: 'var(--ink-dim)',
+    border: '1.5px solid var(--paper-line)',
     cursor: 'pointer',
     marginBottom: '20px',
-    fontWeight: '600'
+    fontWeight: '600',
+    fontFamily: 'var(--font-body)',
+    fontSize: '13px'
   },
   detailContainer: {
+    position: 'relative',
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gap: '40px',
-    background: 'white',
+    background: 'var(--paper)',
     padding: '30px',
-    borderRadius: '12px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+    boxShadow: '0 10px 18px -6px rgba(20,12,4,0.4), 0 2px 0 rgba(255,255,255,0.4) inset'
   },
   imageSection: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '15px'
+    gap: '14px'
   },
   mainImage: {
     width: '100%',
-    height: '400px',
-    background: '#f5f5f5',
-    borderRadius: '12px',
+    height: '380px',
+    background: 'var(--paper-raised)',
     overflow: 'hidden',
-    position: 'relative'
+    position: 'relative',
+    border: '1px dashed var(--paper-line)'
   },
   image: {
     width: '100%',
@@ -206,12 +208,12 @@ const styles = {
     position: 'absolute',
     top: '50%',
     transform: 'translateY(-50%)',
-    background: 'rgba(0,0,0,0.5)',
-    color: 'white',
+    background: 'rgba(20,12,4,0.55)',
+    color: 'var(--paper)',
     border: 'none',
     padding: '10px 15px',
     cursor: 'pointer',
-    fontSize: '20px',
+    fontSize: '18px',
     borderRadius: '50%'
   },
   thumbnails: {
@@ -220,16 +222,15 @@ const styles = {
     overflowX: 'auto'
   },
   thumbnail: {
-    width: '80px',
-    height: '80px',
+    width: '76px',
+    height: '76px',
     objectFit: 'cover',
-    borderRadius: '8px',
     cursor: 'pointer'
   },
   infoSection: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px'
+    gap: '18px'
   },
   header: {
     display: 'flex',
@@ -237,56 +238,90 @@ const styles = {
     alignItems: 'center'
   },
   title: {
-    fontSize: '28px',
+    fontFamily: 'var(--font-display)',
+    fontWeight: 400,
+    fontSize: '24px',
     margin: 0,
-    color: '#2c3e50'
+    color: 'var(--ink)'
+  },
+  sectionHeading: {
+    fontFamily: 'var(--font-display)',
+    fontWeight: 400,
+    fontSize: '15px',
+    color: 'var(--ink)',
+    margin: '0 0 8px'
+  },
+  listingTypeBadge: {
+    alignSelf: 'flex-start',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '11px',
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    letterSpacing: '0.04em',
+    padding: '3px 9px',
+    border: '1.5px solid'
+  },
+  listingTypeBadgeSale: {
+    color: 'var(--twine)',
+    borderColor: 'var(--twine)'
+  },
+  listingTypeBadgeRent: {
+    color: 'var(--resolved-green)',
+    borderColor: 'var(--resolved-green)'
   },
   priceSection: {
     display: 'flex',
     alignItems: 'baseline',
-    gap: '5px'
+    gap: '4px',
+    fontFamily: 'var(--font-mono)'
   },
   price: {
-    fontSize: '36px',
-    fontWeight: '700',
-    color: '#667eea'
+    fontSize: '32px',
+    fontWeight: '600',
+    color: 'var(--pin-red)'
   },
   period: {
-    fontSize: '18px',
-    color: '#95a5a6'
+    fontSize: '15px',
+    color: 'var(--ink-faint)'
   },
   category: {
-    fontSize: '16px',
-    color: '#666'
+    fontSize: '14px',
+    color: 'var(--ink-dim)'
   },
   description: {
-    lineHeight: '1.6'
+    lineHeight: '1.6',
+    color: 'var(--ink-dim)',
+    fontSize: '14.5px'
   },
   availability: {
-    padding: '15px',
-    background: '#f8f9fa',
-    borderRadius: '8px',
-    fontSize: '16px'
+    padding: '14px 16px',
+    background: 'var(--paper-raised)',
+    border: '1px solid var(--paper-line)',
+    fontSize: '14px',
+    color: 'var(--ink)'
   },
   views: {
-    fontSize: '14px',
-    color: '#95a5a6'
+    fontFamily: 'var(--font-mono)',
+    fontSize: '12.5px',
+    color: 'var(--ink-faint)'
   },
   ownerSection: {
-    padding: '20px',
-    background: '#f8f9fa',
-    borderRadius: '8px'
+    padding: '18px',
+    background: 'var(--paper-raised)',
+    border: '1px solid var(--paper-line)',
+    fontSize: '14px',
+    color: 'var(--ink-dim)'
   },
   interestBtn: {
-    padding: '15px 30px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: 'white',
+    padding: '14px 28px',
+    background: 'var(--pin-red)',
+    color: 'var(--paper)',
     border: 'none',
-    borderRadius: '8px',
-    fontSize: '18px',
-    fontWeight: '600',
+    boxShadow: '0 4px 0 var(--pin-red-deep), 0 6px 10px rgba(0,0,0,0.25)',
+    fontFamily: 'var(--font-display)',
+    fontSize: '15px',
     cursor: 'pointer',
-    marginTop: '10px'
+    marginTop: '6px'
   },
   modal: {
     position: 'fixed',
@@ -294,28 +329,31 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(0,0,0,0.5)',
+    background: 'rgba(20,12,4,0.55)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000
   },
   modalContent: {
-    background: 'white',
-    padding: '30px',
-    borderRadius: '12px',
+    position: 'relative',
+    background: 'var(--paper)',
+    padding: '28px',
     maxWidth: '400px',
-    width: '90%'
+    width: '90%',
+    boxShadow: '0 10px 18px -6px rgba(20,12,4,0.4), 0 2px 0 rgba(255,255,255,0.4) inset',
+    color: 'var(--ink)'
   },
   closeBtn: {
-    marginTop: '20px',
+    marginTop: '18px',
     padding: '10px 20px',
-    background: '#667eea',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
+    background: 'transparent',
+    color: 'var(--ink-dim)',
+    border: '1.5px solid var(--paper-line)',
     cursor: 'pointer',
-    width: '100%'
+    width: '100%',
+    fontFamily: 'var(--font-body)',
+    fontWeight: 600
   }
 };
 

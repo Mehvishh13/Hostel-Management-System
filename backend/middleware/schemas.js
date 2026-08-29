@@ -56,12 +56,14 @@ const rentalCategory = z.enum([
   'other'
 ]);
 const rentalCondition = z.enum(['new', 'like-new', 'good', 'fair', 'poor']);
+const listingType = z.enum(['rent', 'sale']);
 
 exports.createRentalSchema = z.object({
   title: nonEmpty('title', 200),
   description: nonEmpty('description', 5000),
   category: rentalCategory,
-  pricePerDay: z.coerce.number().nonnegative('pricePerDay cannot be negative'),
+  listingType: listingType.optional(),
+  price: z.coerce.number().nonnegative('price cannot be negative'),
   images: z.array(z.string()).max(10).optional(),
   condition: rentalCondition.optional()
 });
@@ -71,7 +73,8 @@ exports.updateRentalSchema = z
     title: nonEmpty('title', 200).optional(),
     description: nonEmpty('description', 5000).optional(),
     category: rentalCategory.optional(),
-    pricePerDay: z.coerce.number().nonnegative().optional(),
+    listingType: listingType.optional(),
+    price: z.coerce.number().nonnegative().optional(),
     images: z.array(z.string()).max(10).optional(),
     condition: rentalCondition.optional(),
     available: z.boolean().optional()

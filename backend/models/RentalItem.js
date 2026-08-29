@@ -16,7 +16,13 @@ const rentalItemSchema = new mongoose.Schema({
     enum: ['books', 'electronics', 'furniture', 'sports', 'clothing', 'other'],
     required: true
   },
-  pricePerDay: {
+  listingType: {
+    type: String,
+    enum: ['rent', 'sale'],
+    default: 'rent',
+    required: true
+  },
+  price: {
     type: Number,
     required: true,
     min: 0
@@ -75,6 +81,7 @@ rentalItemSchema.pre('save', function(next) {
 
 // Indexes matching the category/availability filters in rentalController.
 rentalItemSchema.index({ category: 1, available: 1, createdAt: -1 });
+rentalItemSchema.index({ listingType: 1, available: 1, createdAt: -1 });
 rentalItemSchema.index({ ownerId: 1 });
 
 module.exports = mongoose.model('RentalItem', rentalItemSchema);

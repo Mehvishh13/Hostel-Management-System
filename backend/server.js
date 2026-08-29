@@ -29,6 +29,11 @@ app.use(
   })
 );
 
+// Rental listings carry base64 image data URIs, so they get a higher body
+// limit than the rest of the API. Must be registered before the general
+// json() below — body-parser skips re-parsing once req._body is set, so
+// whichever matching parser runs first wins.
+app.use('/api/rentals', express.json({ limit: '12mb' }));
 app.use(express.json({ limit: '1mb' }));
 
 // Request logging, development only. Credentials are redacted so passwords

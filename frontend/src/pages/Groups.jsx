@@ -32,16 +32,16 @@ const Groups = () => {
   const handleJoinGroup = async (groupId, e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     try {
       const response = await api.post(`/api/groups/${groupId}/join`, {});
-      
+
       if (response.data.data.pending) {
         alert('Join request sent! Waiting for admin approval.');
       } else {
         alert('Successfully joined the group!');
       }
-      
+
       fetchGroups();
     } catch (error) {
       console.error('Error joining group:', error);
@@ -52,10 +52,10 @@ const Groups = () => {
   const handleCancelRequest = async (groupId, e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     try {
       await api.post(`/api/groups/${groupId}/cancel-request`, {});
-      
+
       alert('Join request cancelled');
       fetchGroups();
     } catch (error) {
@@ -71,11 +71,11 @@ const Groups = () => {
 
   const filteredGroups = () => {
     let filtered = filter === 'my' ? getMyGroups() : allGroups;
-    
+
     if (categoryFilter !== 'all') {
       filtered = filtered.filter(g => g.category === categoryFilter);
     }
-    
+
     return filtered;
   };
 
@@ -83,22 +83,18 @@ const Groups = () => {
     const userStatus = group.userStatus || {};
 
     if (userStatus.isMember) {
-      return (
-        <span style={styles.memberBadge}>
-          ✓ Member
-        </span>
-      );
+      return <span className="stamp stamp--member">Member</span>;
     }
 
     if (userStatus.isPending) {
       return (
-        <div style={styles.pendingContainer}>
-          <span style={styles.pendingBadge}>⏳ Pending</span>
+        <div className="pending-container">
+          <span className="stamp stamp--pending">Pending</span>
           <button
             onClick={(e) => handleCancelRequest(group._id, e)}
-            style={styles.cancelBtn}
+            className="cancel-btn"
           >
-            Cancel
+            Cancel request
           </button>
         </div>
       );
@@ -108,9 +104,9 @@ const Groups = () => {
       return (
         <button
           onClick={(e) => handleJoinGroup(group._id, e)}
-          style={styles.joinBtn}
+          className="join-btn"
         >
-          {group.settings?.requireApproval ? '🔔 Request to Join' : '➕ Join Group'}
+          {group.settings?.requireApproval ? 'Request to join' : 'Join group'}
         </button>
       );
     }
@@ -121,9 +117,9 @@ const Groups = () => {
   if (loading) {
     return (
       <div className="groups-container">
-        <div style={styles.loadingContainer}>
-          <div style={styles.spinner}></div>
-          <p>Loading groups...</p>
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Loading groups…</p>
         </div>
       </div>
     );
@@ -132,9 +128,9 @@ const Groups = () => {
   return (
     <div className="groups-container">
       <div className="groups-header">
-        <h1>🏘️ Hostel Groups</h1>
-        <Link to="/groups/create" style={styles.createBtn}>
-          + Create Group
+        <h1>Hostel Groups</h1>
+        <Link to="/groups/create" className="pin-btn">
+          + Create group
         </Link>
       </div>
 
@@ -144,13 +140,13 @@ const Groups = () => {
           className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
           onClick={() => setFilter('all')}
         >
-          🌍 All Groups ({allGroups.length})
+          All groups ({allGroups.length})
         </button>
         <button
           className={`filter-btn ${filter === 'my' ? 'active' : ''}`}
           onClick={() => setFilter('my')}
         >
-          👤 My Groups ({getMyGroups().length})
+          My groups ({getMyGroups().length})
         </button>
       </div>
 
@@ -160,7 +156,7 @@ const Groups = () => {
           className={`filter-btn ${categoryFilter === 'all' ? 'active' : ''}`}
           onClick={() => setCategoryFilter('all')}
         >
-          📂 All Categories
+          All categories
         </button>
         {categories.map(cat => (
           <button
@@ -174,25 +170,21 @@ const Groups = () => {
       </div>
 
       {filteredGroups().length === 0 ? (
-        <div style={styles.noItems}>
-          <div style={styles.emptyIcon}>🏘️</div>
+        <div className="no-items">
           <h2>No groups found</h2>
-          <p style={styles.emptyText}>
-            {filter === 'my' 
+          <p className="empty-text">
+            {filter === 'my'
               ? "You haven't joined any groups yet. Browse available groups below!"
-              : "Be the first to create a group for your hostel community!"}
+              : 'Be the first to create a group for your hostel community!'}
           </p>
           {filter === 'my' && (
-            <button
-              onClick={() => setFilter('all')}
-              style={styles.primaryBtn}
-            >
-              Browse All Groups
+            <button onClick={() => setFilter('all')} className="pin-btn">
+              Browse all groups
             </button>
           )}
           {filter === 'all' && (
-            <Link to="/groups/create" style={styles.primaryBtn}>
-              Create First Group
+            <Link to="/groups/create" className="pin-btn">
+              Create first group
             </Link>
           )}
         </div>
@@ -204,10 +196,10 @@ const Groups = () => {
                 {group.image ? (
                   <img src={group.image} alt={group.name} />
                 ) : (
-                  <span style={styles.defaultIcon}>👥</span>
+                  <span className="group-monogram">{group.name?.charAt(0)?.toUpperCase()}</span>
                 )}
                 <div className="privacy-badge">
-                  {group.privacy === 'private' ? '🔒' : '🌐'}
+                  {group.privacy === 'private' ? 'Private' : 'Public'}
                 </div>
               </div>
 
@@ -216,45 +208,38 @@ const Groups = () => {
                 <p className="group-description">{group.description}</p>
 
                 <div className="group-footer">
-                  <div className="group-members">
-                    <span>👥</span>
-                    <span>{group.memberCount || group.members?.length || 0} members</span>
-                  </div>
-                  <span className="group-category">
+                  <span className="group-members">
+                    <b>{group.memberCount || group.members?.length || 0}</b> members
+                  </span>
+                  <span className={`group-category ${group.category === 'events' ? 'group-category--events' : ''}`}>
                     {group.category?.charAt(0).toUpperCase() + group.category?.slice(1)}
                   </span>
                 </div>
 
                 {/* Show admin/creator badge if applicable */}
                 {group.userStatus?.isCreator && (
-                  <div style={styles.roleBadge}>
-                    <span style={{...styles.badge, background: '#f39c12'}}>
-                      👑 Creator
-                    </span>
+                  <div className="role-badge">
+                    <span className="stamp stamp--creator">Creator</span>
                   </div>
                 )}
                 {group.userStatus?.isGroupAdmin && !group.userStatus?.isCreator && (
-                  <div style={styles.roleBadge}>
-                    <span style={{...styles.badge, background: '#667eea'}}>
-                      ⭐ Admin
-                    </span>
+                  <div className="role-badge">
+                    <span className="stamp stamp--admin">Admin</span>
                   </div>
                 )}
 
                 {/* Show approval required message */}
                 {group.settings?.requireApproval && !group.userStatus?.isMember && (
-                  <div style={styles.approvalNote}>
-                    <span>🔔 Requires admin approval</span>
-                  </div>
+                  <p className="approval-note">Requires admin approval</p>
                 )}
 
-                <div style={styles.actions}>
-                  <Link 
-                    to={`/groups/${group._id}`} 
-                    style={styles.viewBtn}
+                <div className="actions">
+                  <Link
+                    to={`/groups/${group._id}`}
+                    className="view-btn"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    👁️ View Details
+                    View details
                   </Link>
                   {getGroupStatusButton(group)}
                 </div>
@@ -265,155 +250,6 @@ const Groups = () => {
       )}
     </div>
   );
-};
-
-const styles = {
-  createBtn: {
-    padding: '12px 24px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: 'white',
-    textDecoration: 'none',
-    borderRadius: '8px',
-    fontWeight: '600',
-    display: 'inline-block',
-    transition: 'all 0.3s ease'
-  },
-  primaryBtn: {
-    padding: '12px 24px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: 'white',
-    textDecoration: 'none',
-    borderRadius: '8px',
-    fontWeight: '600',
-    display: 'inline-block',
-    marginTop: '10px',
-    border: 'none',
-    cursor: 'pointer'
-  },
-  defaultIcon: {
-    fontSize: '64px'
-  },
-  actions: {
-    display: 'flex',
-    gap: '10px',
-    marginTop: '15px',
-    alignItems: 'stretch'
-  },
-  viewBtn: {
-    flex: 1,
-    padding: '10px',
-    background: '#667eea',
-    color: 'white',
-    textDecoration: 'none',
-    borderRadius: '8px',
-    textAlign: 'center',
-    fontWeight: '600',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.3s ease'
-  },
-  joinBtn: {
-    flex: 1,
-    padding: '10px',
-    background: '#27ae60',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    fontSize: '14px'
-  },
-  memberBadge: {
-    flex: 1,
-    padding: '10px',
-    background: '#95a5a6',
-    color: 'white',
-    borderRadius: '8px',
-    textAlign: 'center',
-    fontWeight: '600',
-    fontSize: '14px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  pendingContainer: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '5px'
-  },
-  pendingBadge: {
-    padding: '8px',
-    background: '#f39c12',
-    color: 'white',
-    borderRadius: '8px',
-    textAlign: 'center',
-    fontWeight: '600',
-    fontSize: '13px'
-  },
-  cancelBtn: {
-    padding: '6px',
-    background: '#e74c3c',
-    color: 'white',
-    border: 'none',
-    borderRadius: '6px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    fontSize: '12px',
-    transition: 'all 0.3s ease'
-  },
-  noItems: {
-    textAlign: 'center',
-    padding: '60px 20px',
-    background: 'white',
-    borderRadius: '12px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-  },
-  emptyIcon: {
-    fontSize: '80px',
-    marginBottom: '20px'
-  },
-  emptyText: {
-    color: '#7f8c8d',
-    fontSize: '16px',
-    marginBottom: '20px'
-  },
-  roleBadge: {
-    marginTop: '10px'
-  },
-  badge: {
-    display: 'inline-block',
-    padding: '6px 12px',
-    borderRadius: '20px',
-    color: 'white',
-    fontSize: '12px',
-    fontWeight: '600'
-  },
-  approvalNote: {
-    marginTop: '10px',
-    padding: '8px',
-    background: '#fff3cd',
-    color: '#856404',
-    borderRadius: '6px',
-    fontSize: '13px',
-    textAlign: 'center',
-    fontWeight: '600'
-  },
-  loadingContainer: {
-    textAlign: 'center',
-    padding: '60px 20px'
-  },
-  spinner: {
-    width: '50px',
-    height: '50px',
-    border: '4px solid #f3f3f3',
-    borderTop: '4px solid #667eea',
-    borderRadius: '50%',
-    animation: 'spin 1s linear infinite',
-    margin: '0 auto 20px'
-  }
 };
 
 export default Groups;

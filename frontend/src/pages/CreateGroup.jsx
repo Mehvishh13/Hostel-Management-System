@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/client';
+import './CreateGroup.css';
 
 const CreateGroup = () => {
   const navigate = useNavigate();
@@ -78,46 +79,43 @@ const CreateGroup = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.formCard}>
-        <h1 style={styles.title}>Create New Group</h1>
+    <div className="create-group-container">
+      <div className="create-group-card">
+        <h1 className="create-group-title">Create New Group</h1>
 
-        {error && <div style={styles.error}>{error}</div>}
+        {error && <div className="error-message">{error}</div>}
 
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Group Name *</label>
+        <form onSubmit={handleSubmit} className="create-group-form">
+          <div className="form-group">
+            <label>Group Name *</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               placeholder="e.g., CS Students Study Group"
-              style={styles.input}
               required
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Description *</label>
+          <div className="form-group">
+            <label>Description *</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               placeholder="Describe the purpose of this group..."
-              style={{...styles.input, minHeight: '100px', resize: 'vertical'}}
               required
             />
           </div>
 
-          <div style={styles.row}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Category *</label>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Category *</label>
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                style={styles.input}
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
@@ -125,13 +123,12 @@ const CreateGroup = () => {
               </select>
             </div>
 
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Privacy *</label>
+            <div className="form-group">
+              <label>Privacy *</label>
               <select
                 name="privacy"
                 value={formData.privacy}
                 onChange={handleChange}
-                style={styles.input}
               >
                 <option value="public">Public</option>
                 <option value="private">Private</option>
@@ -139,21 +136,21 @@ const CreateGroup = () => {
             </div>
           </div>
 
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Group Image</label>
+          <div className="form-group">
+            <label>Group Image</label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
-              style={styles.fileInput}
+              className="file-input"
             />
             {formData.image && (
-              <div style={styles.imagePreview}>
-                <img src={formData.image} alt="Preview" style={styles.previewImg} />
+              <div className="image-preview">
+                <img src={formData.image} alt="Preview" className="preview-img" />
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({...prev, image: ''}))}
-                  style={styles.removeBtn}
+                  className="remove-image-btn"
                 >
                   Remove Image
                 </button>
@@ -161,70 +158,70 @@ const CreateGroup = () => {
             )}
           </div>
 
-          <div style={styles.advancedSection}>
-            <h3 style={styles.sectionTitle}>Advanced Settings</h3>
-            
-            <div style={styles.checkboxGroup}>
-              <label style={styles.checkboxLabel}>
+          <div className="advanced-section">
+            <h3 className="advanced-section-title">Advanced Settings</h3>
+
+            <div className="checkbox-group">
+              <label className="checkbox-label">
                 <input
                   type="checkbox"
                   name="hiddenFromHostelAdmin"
                   checked={formData.settings.hiddenFromHostelAdmin}
                   onChange={handleSettingChange}
-                  style={styles.checkbox}
+                  className="checkbox-input"
                 />
                 <span>Hide from admin view</span>
               </label>
-              <p style={styles.hint}>
+              <p className="checkbox-hint">
                 Group will not be visible in admin dashboard
               </p>
             </div>
 
-            <div style={styles.checkboxGroup}>
-              <label style={styles.checkboxLabel}>
+            <div className="checkbox-group">
+              <label className="checkbox-label">
                 <input
                   type="checkbox"
                   name="requireApproval"
                   checked={formData.settings.requireApproval}
                   onChange={handleSettingChange}
-                  style={styles.checkbox}
+                  className="checkbox-input"
                 />
                 <span>Require admin approval for new members</span>
               </label>
-              <p style={styles.hint}>
+              <p className="checkbox-hint">
                 New members must be approved before joining
               </p>
             </div>
 
-            <div style={styles.checkboxGroup}>
-              <label style={styles.checkboxLabel}>
+            <div className="checkbox-group">
+              <label className="checkbox-label">
                 <input
                   type="checkbox"
                   name="onlyAdminsCanPost"
                   checked={formData.settings.onlyAdminsCanPost}
                   onChange={handleSettingChange}
-                  style={styles.checkbox}
+                  className="checkbox-input"
                 />
                 <span>Only admins can post messages</span>
               </label>
-              <p style={styles.hint}>
+              <p className="checkbox-hint">
                 Regular members can only read messages
               </p>
             </div>
           </div>
 
-          <div style={styles.buttonGroup}>
+          <div className="button-group">
             <button
               type="button"
               onClick={() => navigate('/groups')}
-              style={styles.cancelBtn}
+              className="cancel-btn"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              style={{...styles.submitBtn, opacity: loading ? 0.6 : 1}}
+              className="pin-btn"
             >
               {loading ? 'Creating...' : 'Create Group'}
             </button>
@@ -233,149 +230,6 @@ const CreateGroup = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    maxWidth: '800px',
-    margin: '0 auto',
-    padding: '30px 20px'
-  },
-  formCard: {
-    background: 'white',
-    borderRadius: '12px',
-    padding: '40px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-  },
-  title: {
-    fontSize: '32px',
-    color: '#2c3e50',
-    marginBottom: '30px',
-    textAlign: 'center'
-  },
-  error: {
-    background: '#fee',
-    color: '#c33',
-    padding: '15px',
-    borderRadius: '8px',
-    marginBottom: '20px',
-    border: '1px solid #fcc'
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px'
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-    flex: 1
-  },
-  label: {
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#2c3e50'
-  },
-  input: {
-    padding: '12px',
-    border: '2px solid #e0e0e0',
-    borderRadius: '8px',
-    fontSize: '16px',
-    transition: 'border-color 0.3s',
-    outline: 'none'
-  },
-  row: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '20px'
-  },
-  fileInput: {
-    padding: '10px',
-    border: '2px dashed #e0e0e0',
-    borderRadius: '8px',
-    cursor: 'pointer'
-  },
-  imagePreview: {
-    marginTop: '15px',
-    textAlign: 'center'
-  },
-  previewImg: {
-    maxWidth: '100%',
-    maxHeight: '200px',
-    borderRadius: '8px',
-    marginBottom: '10px'
-  },
-  removeBtn: {
-    padding: '8px 16px',
-    background: '#e74c3c',
-    color: 'white',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    fontSize: '14px'
-  },
-  advancedSection: {
-    marginTop: '20px',
-    padding: '20px',
-    background: '#f8f9fa',
-    borderRadius: '8px'
-  },
-  sectionTitle: {
-    fontSize: '18px',
-    color: '#2c3e50',
-    marginBottom: '15px'
-  },
-  checkboxGroup: {
-    marginBottom: '15px'
-  },
-  checkboxLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    fontSize: '16px',
-    color: '#2c3e50',
-    cursor: 'pointer',
-    fontWeight: '500'
-  },
-  checkbox: {
-    width: '18px',
-    height: '18px',
-    cursor: 'pointer'
-  },
-  hint: {
-    fontSize: '13px',
-    color: '#7f8c8d',
-    marginLeft: '28px',
-    marginTop: '5px'
-  },
-  buttonGroup: {
-    display: 'flex',
-    gap: '15px',
-    marginTop: '10px'
-  },
-  cancelBtn: {
-    flex: 1,
-    padding: '15px',
-    background: '#95a5a6',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer'
-  },
-  submitBtn: {
-    flex: 1,
-    padding: '15px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer'
-  }
 };
 
 export default CreateGroup;

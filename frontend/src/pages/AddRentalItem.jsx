@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/client';
+import './AddRentalItem.css';
 
 const AddRentalItem = () => {
   const navigate = useNavigate();
@@ -8,7 +9,8 @@ const AddRentalItem = () => {
     title: '',
     description: '',
     category: 'Books',
-    pricePerDay: '',
+    listingType: 'rent',
+    price: '',
     condition: 'good',
     images: []
   });
@@ -26,19 +28,48 @@ const AddRentalItem = () => {
     }));
   };
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({
-          ...prev,
-          images: [...prev.images, reader.result]
-        }));
+  // Phone camera photos routinely run 3-8MB; downscale to a max dimension
+  // and re-encode as JPEG so a handful of images stay well under the API's
+  // request body limit.
+  const MAX_DIMENSION = 1280;
+  const JPEG_QUALITY = 0.72;
+
+  const compressImage = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const scale = Math.min(1, MAX_DIMENSION / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        resolve(canvas.toDataURL('image/jpeg', JPEG_QUALITY));
       };
-      reader.readAsDataURL(file);
-    });
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  const handleImageUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    e.target.value = '';
+
+    try {
+      const compressed = await Promise.all(files.map(compressImage));
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, ...compressed].slice(0, 5)
+      }));
+    } catch (err) {
+      console.error('Error processing image:', err);
+      setError('Failed to process one of the images');
+    }
   };
 
   const removeImage = (index) => {
@@ -51,17 +82,17 @@ const AddRentalItem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
-    if (!formData.title || !formData.description || !formData.pricePerDay) {
+
+    if (!formData.title || !formData.description || !formData.price) {
       setError('Please fill in all required fields');
       return;
     }
 
     setLoading(true);
-    
+
     try {
       await api.post('/api/rentals', formData);
-      
+
       alert('Item added successfully!');
       navigate('/marketplace');
     } catch (error) {
@@ -72,46 +103,63 @@ const AddRentalItem = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.formCard}>
-        <h1 style={styles.title}>Add New Rental Item</h1>
-        
-        {error && <div style={styles.error}>{error}</div>}
-        
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Title *</label>
+    <div className="add-rental-item-container">
+      <div className="add-rental-item-card">
+        <h1 className="add-rental-item-title">List an item</h1>
+
+        {error && <div className="error-message">{error}</div>}
+
+        <form onSubmit={handleSubmit} className="add-rental-item-form">
+          <div className="form-group">
+            <label>Listing type *</label>
+            <div className="listing-type-toggle">
+              <button
+                type="button"
+                className={`listing-type-btn ${formData.listingType === 'rent' ? 'active' : ''}`}
+                onClick={() => setFormData(prev => ({ ...prev, listingType: 'rent' }))}
+              >
+                For rent
+              </button>
+              <button
+                type="button"
+                className={`listing-type-btn ${formData.listingType === 'sale' ? 'active' : ''}`}
+                onClick={() => setFormData(prev => ({ ...prev, listingType: 'sale' }))}
+              >
+                For sale
+              </button>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Title *</label>
             <input
               type="text"
               name="title"
               value={formData.title}
               onChange={handleChange}
               placeholder="e.g., Python Programming Textbook"
-              style={styles.input}
               required
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Description *</label>
+          <div className="form-group">
+            <label>Description *</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               placeholder="Describe your item in detail..."
-              style={{...styles.input, minHeight: '100px', resize: 'vertical'}}
               required
             />
           </div>
 
-          <div style={styles.row}>
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Category *</label>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Category *</label>
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                style={styles.input}
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
@@ -119,28 +167,26 @@ const AddRentalItem = () => {
               </select>
             </div>
 
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Price per Day (₹) *</label>
+            <div className="form-group">
+              <label>{formData.listingType === 'sale' ? 'Price (₹) *' : 'Price per day (₹) *'}</label>
               <input
                 type="number"
-                name="pricePerDay"
-                value={formData.pricePerDay}
+                name="price"
+                value={formData.price}
                 onChange={handleChange}
                 placeholder="10"
                 min="1"
-                style={styles.input}
                 required
               />
             </div>
           </div>
 
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Condition *</label>
+          <div className="form-group">
+            <label>Condition *</label>
             <select
               name="condition"
               value={formData.condition}
               onChange={handleChange}
-              style={styles.input}
             >
               {conditions.map(cond => (
                 <option key={cond} value={cond}>{cond}</option>
@@ -148,28 +194,28 @@ const AddRentalItem = () => {
             </select>
           </div>
 
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Images (Max 5)</label>
+          <div className="form-group">
+            <label>Images (Max 5)</label>
             <input
               type="file"
               accept="image/*"
               multiple
               onChange={handleImageUpload}
-              style={styles.fileInput}
+              className="file-input"
               disabled={formData.images.length >= 5}
             />
-            <p style={styles.hint}>You can upload up to 5 images</p>
+            <p className="hint">You can upload up to 5 images</p>
           </div>
 
           {formData.images.length > 0 && (
-            <div style={styles.imagePreview}>
+            <div className="image-preview-grid">
               {formData.images.map((img, index) => (
-                <div key={index} style={styles.imageContainer}>
-                  <img src={img} alt={`Preview ${index + 1}`} style={styles.previewImg} />
+                <div key={index} className="image-preview-item">
+                  <img src={img} alt={`Preview ${index + 1}`} />
                   <button
                     type="button"
                     onClick={() => removeImage(index)}
-                    style={styles.removeBtn}
+                    className="image-remove-btn"
                   >
                     ✕
                   </button>
@@ -178,18 +224,18 @@ const AddRentalItem = () => {
             </div>
           )}
 
-          <div style={styles.buttonGroup}>
+          <div className="form-button-group">
             <button
               type="button"
               onClick={() => navigate('/marketplace')}
-              style={styles.cancelBtn}
+              className="btn-cancel"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              style={{...styles.submitBtn, opacity: loading ? 0.6 : 1}}
+              className="btn-submit"
             >
               {loading ? 'Adding...' : 'Add Item'}
             </button>
@@ -198,137 +244,6 @@ const AddRentalItem = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    maxWidth: '800px',
-    margin: '0 auto',
-    padding: '30px 20px'
-  },
-  formCard: {
-    background: 'white',
-    borderRadius: '12px',
-    padding: '40px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-  },
-  title: {
-    fontSize: '32px',
-    color: '#2c3e50',
-    marginBottom: '30px',
-    textAlign: 'center'
-  },
-  error: {
-    background: '#fee',
-    color: '#c33',
-    padding: '15px',
-    borderRadius: '8px',
-    marginBottom: '20px',
-    border: '1px solid #fcc'
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px'
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-    flex: 1
-  },
-  label: {
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#2c3e50'
-  },
-  input: {
-    padding: '12px',
-    border: '2px solid #e0e0e0',
-    borderRadius: '8px',
-    fontSize: '16px',
-    transition: 'border-color 0.3s',
-    outline: 'none'
-  },
-  row: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '20px'
-  },
-  fileInput: {
-    padding: '10px',
-    border: '2px dashed #e0e0e0',
-    borderRadius: '8px',
-    cursor: 'pointer'
-  },
-  hint: {
-    fontSize: '12px',
-    color: '#95a5a6',
-    margin: 0
-  },
-  imagePreview: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-    gap: '15px'
-  },
-  imageContainer: {
-    position: 'relative',
-    paddingTop: '100%',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    border: '2px solid #e0e0e0'
-  },
-  previewImg: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover'
-  },
-  removeBtn: {
-    position: 'absolute',
-    top: '5px',
-    right: '5px',
-    background: '#e74c3c',
-    color: 'white',
-    border: 'none',
-    borderRadius: '50%',
-    width: '25px',
-    height: '25px',
-    cursor: 'pointer',
-    fontSize: '16px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  buttonGroup: {
-    display: 'flex',
-    gap: '15px',
-    marginTop: '10px'
-  },
-  cancelBtn: {
-    flex: 1,
-    padding: '15px',
-    background: '#95a5a6',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer'
-  },
-  submitBtn: {
-    flex: 1,
-    padding: '15px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer'
-  }
 };
 
 export default AddRentalItem;

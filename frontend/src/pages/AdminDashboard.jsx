@@ -4,6 +4,18 @@ import { Link } from 'react-router-dom';
 import api from '../api/client';
 import './AdminDashboard.css';
 
+const STAMP_META = {
+  pending: { label: 'Pending', mark: 'pending' },
+  'in-progress': { label: 'In progress', mark: 'progress' },
+  resolved: { label: 'Resolved', mark: 'resolved' },
+  rejected: { label: 'Rejected', mark: 'rejected' }
+};
+
+const Stamp = ({ status }) => {
+  const meta = STAMP_META[status] || STAMP_META.pending;
+  return <span className={`stamp stamp--${meta.mark}`}>{meta.label}</span>;
+};
+
 const AdminDashboard = () => {
   const [complaints, setComplaints] = useState([]);
   const [stats, setStats] = useState({
@@ -24,9 +36,9 @@ const AdminDashboard = () => {
     try {
       const res = await api.get('/api/complaints');
       const complaints = res.data.data;
-      
+
       setComplaints(complaints);
-      
+
       // Calculate stats
       const stats = {
         total: complaints.length,
@@ -40,25 +52,6 @@ const AdminDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getStatusColor = (status) => {
-    const colors = {
-      pending: '#f39c12',
-      'in-progress': '#3498db',
-      resolved: '#27ae60',
-      rejected: '#e74c3c'
-    };
-    return colors[status] || '#95a5a6';
-  };
-
-  const getPriorityColor = (priority) => {
-    const colors = {
-      low: '#27ae60',
-      medium: '#f39c12',
-      high: '#e74c3c'
-    };
-    return colors[priority] || '#95a5a6';
   };
 
   const filteredComplaints = complaints.filter(complaint => {
@@ -81,9 +74,6 @@ const AdminDashboard = () => {
       {/* Stats Overview */}
       <div className="admin-stats-grid">
         <div className="admin-stat-card">
-          <div className="stat-icon" style={{ backgroundColor: '#3498db' }}>
-            📊
-          </div>
           <div className="stat-content">
             <h2>{stats.total}</h2>
             <p>Total Complaints</p>
@@ -91,9 +81,6 @@ const AdminDashboard = () => {
         </div>
 
         <div className="admin-stat-card">
-          <div className="stat-icon" style={{ backgroundColor: '#f39c12' }}>
-            ⏳
-          </div>
           <div className="stat-content">
             <h2>{stats.pending}</h2>
             <p>Pending</p>
@@ -102,9 +89,6 @@ const AdminDashboard = () => {
         </div>
 
         <div className="admin-stat-card">
-          <div className="stat-icon" style={{ backgroundColor: '#3498db' }}>
-            🔄
-          </div>
           <div className="stat-content">
             <h2>{stats.inProgress}</h2>
             <p>In Progress</p>
@@ -113,9 +97,6 @@ const AdminDashboard = () => {
         </div>
 
         <div className="admin-stat-card">
-          <div className="stat-icon" style={{ backgroundColor: '#27ae60' }}>
-            ✅
-          </div>
           <div className="stat-content">
             <h2>{stats.resolved}</h2>
             <p>Resolved</p>
@@ -168,8 +149,7 @@ const AdminDashboard = () => {
                 <th>Title</th>
                 <th>Student</th>
                 <th>Room</th>
-                <th>Category</th>
-                <th>Priority</th>
+                <th>Category / Priority</th>
                 <th>Status</th>
                 <th>Date</th>
                 <th>Action</th>
@@ -178,7 +158,7 @@ const AdminDashboard = () => {
             <tbody>
               {filteredComplaints.map((complaint, index) => (
                 <tr key={complaint._id}>
-                  <td>#{index + 1}</td>
+                  <td className="row-id">#{index + 1}</td>
                   <td className="complaint-title">
                     <strong>{complaint.title}</strong>
                     <small>{complaint.description.substring(0, 50)}...</small>
@@ -189,25 +169,18 @@ const AdminDashboard = () => {
                       <small>{complaint.studentId?.email}</small>
                     </div>
                   </td>
-                  <td>{complaint.roomNumber}</td>
+                  <td className="row-room">{complaint.roomNumber}</td>
                   <td>
-                    <span className="category-badge">{complaint.category}</span>
+                    <div className="admin-meta">
+                      <span className="tag-label">{complaint.category}</span>
+                      <span className="sep">·</span>
+                      <span className={`priority priority--${complaint.priority}`}>
+                        {complaint.priority}
+                      </span>
+                    </div>
                   </td>
                   <td>
-                    <span 
-                      className="priority-indicator"
-                      style={{ color: getPriorityColor(complaint.priority) }}
-                    >
-                      ⬤ {complaint.priority}
-                    </span>
-                  </td>
-                  <td>
-                    <span 
-                      className="status-badge" 
-                      style={{ backgroundColor: getStatusColor(complaint.status) }}
-                    >
-                      {complaint.status}
-                    </span>
+                    <Stamp status={complaint.status} />
                   </td>
                   <td>
                     <div className="date-info">
@@ -216,8 +189,8 @@ const AdminDashboard = () => {
                     </div>
                   </td>
                   <td>
-                    <Link 
-                      to={`/complaints/${complaint._id}`} 
+                    <Link
+                      to={`/complaints/${complaint._id}`}
                       className="action-btn"
                     >
                       View Details
@@ -237,15 +210,15 @@ const AdminDashboard = () => {
           {['maintenance', 'cleanliness', 'security', 'food', 'other'].map(category => {
             const count = complaints.filter(c => c.category === category).length;
             const percentage = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-            
+
             return (
               <div key={category} className="category-stat-card">
                 <h3>{category}</h3>
                 <div className="count">{count}</div>
                 <div className="progress-bar">
-                  <div 
-                    className="progress-fill" 
-                    style={{ width: `${percentage}%` }}
+                  <div
+                    className="progress-fill"
+                    style={{ transform: `scaleX(${percentage / 100})` }}
                   />
                 </div>
                 <small>{percentage}% of total</small>

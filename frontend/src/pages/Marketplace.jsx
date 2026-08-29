@@ -8,14 +8,17 @@ const Marketplace = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [listingType, setListingType] = useState('all');
 
   useEffect(() => {
     fetchItems();
-  }, [filter]);
+  }, [filter, listingType]);
 
   const fetchItems = async () => {
     try {
-      const params = filter !== 'all' ? { category: filter } : {};
+      const params = {};
+      if (filter !== 'all') params.category = filter;
+      if (listingType !== 'all') params.listingType = listingType;
       const res = await api.get('/api/rentals', { params });
       const itemsData = res.data.data;
       setItems(Array.isArray(itemsData) ? itemsData : []);
@@ -27,13 +30,13 @@ const Marketplace = () => {
   };
 
   const categories = [
-    { value: 'all', label: 'All Items', icon: '🏪' },
-    { value: 'books', label: 'Books', icon: '📚' },
-    { value: 'electronics', label: 'Electronics', icon: '💻' },
-    { value: 'furniture', label: 'Furniture', icon: '🪑' },
-    { value: 'sports', label: 'Sports', icon: '⚽' },
-    { value: 'clothing', label: 'Clothing', icon: '👕' },
-    { value: 'other', label: 'Other', icon: '📦' }
+    { value: 'all', label: 'All items' },
+    { value: 'books', label: 'Books' },
+    { value: 'electronics', label: 'Electronics' },
+    { value: 'furniture', label: 'Furniture' },
+    { value: 'sports', label: 'Sports' },
+    { value: 'clothing', label: 'Clothing' },
+    { value: 'other', label: 'Other' }
   ];
 
   if (loading) {
@@ -42,14 +45,33 @@ const Marketplace = () => {
 
   return (
     <div className="marketplace-container">
+      <p className="marketplace-container__eyebrow">Hostel Board · Notice Board</p>
+
       <div className="marketplace-header">
         <div>
-          <h1>🛒 Rental Marketplace</h1>
-          <p className="subtitle">Rent items from fellow students</p>
+          <h1>Marketplace</h1>
+          <p className="subtitle">Rent or buy items from fellow students</p>
         </div>
-        <Link to="/marketplace/add" className="btn-primary">
-          + List Item
+        <Link to="/marketplace/add" className="pin-btn">
+          + List item
         </Link>
+      </div>
+
+      {/* Listing Type Filter */}
+      <div className="category-filter">
+        {[
+          { value: 'all', label: 'All listings' },
+          { value: 'rent', label: 'For rent' },
+          { value: 'sale', label: 'For sale' }
+        ].map(opt => (
+          <button
+            key={opt.value}
+            className={`category-btn ${listingType === opt.value ? 'active' : ''}`}
+            onClick={() => setListingType(opt.value)}
+          >
+            {opt.label}
+          </button>
+        ))}
       </div>
 
       {/* Category Filter */}
@@ -60,8 +82,7 @@ const Marketplace = () => {
             className={`category-btn ${filter === cat.value ? 'active' : ''}`}
             onClick={() => setFilter(cat.value)}
           >
-            <span className="category-icon">{cat.icon}</span>
-            <span>{cat.label}</span>
+            {cat.label}
           </button>
         ))}
       </div>
@@ -71,14 +92,14 @@ const Marketplace = () => {
         {items.length === 0 ? (
           <div className="no-items">
             <p>No items available in this category</p>
-            <Link to="/marketplace/add" className="btn-secondary">
+            <Link to="/marketplace/add" className="btn btn-secondary">
               Be the first to list an item!
             </Link>
           </div>
         ) : (
           items.map(item => (
-            <Link 
-              to={`/marketplace/${item._id}`} 
+            <Link
+              to={`/marketplace/${item._id}`}
               key={item._id}
               className="item-card"
             >
@@ -86,34 +107,40 @@ const Marketplace = () => {
                 {item.images && item.images.length > 0 ? (
                   <img src={item.images[0]} alt={item.title} />
                 ) : (
-                  <div className="no-image">📦</div>
+                  <div className="no-image">No photo</div>
                 )}
                 {!item.available && (
-                  <div className="unavailable-badge">Not Available</div>
+                  <div className="unavailable-badge">
+                    {item.listingType === 'sale' ? 'Sold' : 'Not available'}
+                  </div>
                 )}
+                <span className={`listing-type-badge listing-type-badge--${item.listingType}`}>
+                  {item.listingType === 'sale' ? 'For sale' : 'For rent'}
+                </span>
               </div>
-              
+
               <div className="item-content">
                 <h3 className="item-title">{item.title}</h3>
                 <p className="item-description">
                   {item.description.substring(0, 80)}
                   {item.description.length > 80 ? '...' : ''}
                 </p>
-                
+
                 <div className="item-footer">
                   <div className="item-price">
-                    <span className="price-amount">₹{item.pricePerDay}</span>
-                    <span className="price-period">/day</span>
+                    <span className="price-amount">₹{item.price}</span>
+                    {item.listingType !== 'sale' && <span className="price-period">/day</span>}
                   </div>
-                  
+
                   <div className="item-meta">
                     <span className="item-condition">{item.condition}</span>
-                    <span className="item-views">👁 {item.views}</span>
+                    <span className="sep">·</span>
+                    <span className="item-views">{item.views} views</span>
                   </div>
                 </div>
 
                 <div className="item-owner">
-                  <span>By: {item.ownerName}</span>
+                  <span>By {item.ownerName}</span>
                   <span className="owner-room">Room {item.ownerRoom}</span>
                 </div>
               </div>

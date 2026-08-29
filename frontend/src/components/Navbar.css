@@ -1,7 +1,7 @@
-/* components/Navbar.css */
+/* components/Navbar.css — The Notice Board */
 .navbar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--surface);
+  border-bottom: 1px solid var(--surface-line-strong);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -10,69 +10,108 @@
 .nav-container {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70px;
+  height: 66px;
 }
 
 .nav-logo {
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
+  color: var(--surface-ink);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: 0.01em;
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: opacity 0.3s ease;
+  gap: 9px;
 }
 
-.nav-logo:hover {
-  opacity: 0.9;
+.nav-logo-mark {
+  display: flex;
+  color: var(--pin-red);
+  width: 20px;
+  height: 20px;
+}
+
+.nav-logo-mark svg {
+  width: 100%;
+  height: 100%;
 }
 
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
 }
 
 .nav-link {
-  color: white;
+  color: var(--surface-ink-dim);
   text-decoration: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 9px 14px;
+  font-weight: 500;
   font-size: 15px;
-  transition: all 0.3s ease;
   white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.2);
+  color: var(--surface-ink);
 }
 
 .nav-link.active {
-  background: rgba(255, 255, 255, 0.25);
+  color: var(--surface-ink);
+  border-bottom-color: var(--pin-red);
 }
 
-.nav-link.btn-primary {
-  background: white;
-  color: #667eea;
+.nav-link--primary {
+  color: var(--paper);
+  background: var(--pin-red);
+  border-radius: 2px;
+  padding: 9px 16px;
 }
 
-.nav-link.btn-primary:hover {
-  background: rgba(255, 255, 255, 0.9);
+.nav-link--primary:hover {
+  background: var(--pin-red-deep);
+  color: var(--paper);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin: 0 2px;
+  padding: 0;
+  border: 1px solid var(--surface-line-strong);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--surface-ink-dim);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.theme-toggle:hover {
+  color: var(--surface-ink);
+  border-color: var(--surface-ink-dim);
 }
 
 .nav-user {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-left: 20px;
+  gap: 16px;
+  margin-left: 12px;
   padding-left: 20px;
-  border-left: 2px solid rgba(255, 255, 255, 0.3);
+  border-left: 1px solid var(--surface-line-strong);
 }
 
 .user-info {
@@ -80,51 +119,58 @@
   flex-direction: column;
   align-items: flex-end;
   text-decoration: none;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
+  line-height: 1.3;
 }
 
-.user-info:hover {
-  opacity: 0.8;
+.user-info:hover .user-name {
+  color: var(--pin-red);
 }
 
 .user-name {
-  color: white;
+  color: var(--surface-ink);
   font-weight: 600;
   font-size: 14px;
+  transition: color 0.15s ease;
 }
 
 .user-role {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 12px;
-  text-transform: capitalize;
+  color: var(--surface-ink-faint);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .logout-btn {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px solid white;
-  padding: 8px 20px;
-  border-radius: 8px;
+  background: transparent;
+  color: var(--surface-ink-dim);
+  border: 1px solid var(--surface-line-strong);
+  padding: 7px 16px;
+  border-radius: 2px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 14px;
-  transition: all 0.3s ease;
+  font-size: 13px;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
 .logout-btn:hover {
-  background: white;
-  color: #667eea;
+  border-color: var(--pin-red);
+  color: var(--pin-red);
 }
 
 .mobile-menu-icon {
   display: none;
   background: transparent;
   border: none;
-  color: white;
-  font-size: 28px;
+  color: var(--surface-ink);
+  width: 28px;
+  height: 28px;
+  padding: 0;
   cursor: pointer;
-  padding: 5px 10px;
+}
+
+.mobile-menu-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 /* Mobile Responsive */
@@ -132,16 +178,17 @@
   .nav-menu {
     position: fixed;
     left: -100%;
-    top: 70px;
+    top: 66px;
     flex-direction: column;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--surface);
     width: 100%;
-    text-align: center;
-    transition: 0.3s;
-    box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-    padding: 20px 0;
+    text-align: left;
+    transition: left 0.25s ease;
+    box-shadow: 0 10px 27px rgba(0, 0, 0, 0.25);
+    padding: 8px 0;
     gap: 0;
     align-items: stretch;
+    border-bottom: 1px solid var(--surface-line-strong);
   }
 
   .nav-menu.active {
@@ -149,26 +196,36 @@
   }
 
   .nav-link {
-    padding: 15px;
-    border-radius: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 24px;
+    border-bottom: 1px solid var(--surface-line);
+    border-left: 2px solid transparent;
+  }
+
+  .nav-link.active {
+    border-bottom-color: var(--surface-line);
+    border-left-color: var(--pin-red);
+  }
+
+  .nav-link--primary {
+    margin: 8px 24px;
+  }
+
+  .theme-toggle {
+    margin: 8px 24px;
+    align-self: flex-start;
   }
 
   .nav-user {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     margin-left: 0;
-    padding-left: 0;
-    padding: 20px;
+    padding: 16px 24px;
     border-left: none;
-    border-top: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 1px solid var(--surface-line-strong);
   }
 
   .user-info {
-    align-items: center;
-  }
-
-  .logout-btn {
-    width: 100%;
+    align-items: flex-start;
   }
 
   .mobile-menu-icon {
@@ -178,10 +235,10 @@
 
 @media (max-width: 480px) {
   .nav-logo {
-    font-size: 20px;
+    font-size: 17px;
   }
 
   .nav-container {
-    padding: 0 15px;
+    padding: 0 16px;
   }
 }

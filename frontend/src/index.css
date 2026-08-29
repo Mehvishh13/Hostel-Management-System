@@ -1,4 +1,73 @@
-/* index.css - Global Styles */
+/* index.css - Global Styles.
+   The Notice Board world: hostel corkboard, pinned index cards. Tokens here
+   are the single source of truth — see DESIGN.md. Light is the default
+   palette; [data-theme="dark"] below overrides the same token names so every
+   component styled from these variables works in both themes automatically. */
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Board / chrome surface (nav, page ground) */
+  --surface: #a9754a;
+  --surface-raised: #93643c;
+  --surface-line: rgba(43, 27, 12, 0.28);
+  --surface-line-strong: rgba(43, 27, 12, 0.42);
+  --surface-ink: #f6efe1;
+  --surface-ink-dim: rgba(246, 239, 225, 0.72);
+  --surface-ink-faint: rgba(246, 239, 225, 0.5);
+
+  /* Paper (cards, panels) */
+  --paper: #f6efe1;
+  --paper-raised: #efe4cd;
+  --paper-line: #e2d3ae;
+
+  /* Ink (text on paper) */
+  --ink: #2e2115;
+  --ink-dim: #6f5c46;
+  --ink-faint: rgba(46, 33, 21, 0.45);
+
+  /* Page ground (behind chrome, dense content pages) */
+  --page-bg: #efe6d2;
+
+  /* Accents */
+  --pin-red: #c1392b;
+  --pin-red-deep: #9c2c20;
+  --twine: #b9862c;
+  --resolved-green: #4c7a4f;
+
+  --font-display: 'Special Elite', 'Courier New', monospace;
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  --focus-ring: 0 0 0 3px rgba(193, 57, 43, 0.45);
+}
+
+[data-theme='dark'] {
+  --surface: #241a10;
+  --surface-raised: #332415;
+  --surface-line: rgba(246, 239, 225, 0.14);
+  --surface-line-strong: rgba(246, 239, 225, 0.24);
+  --surface-ink: #f1e6d0;
+  --surface-ink-dim: rgba(241, 230, 208, 0.68);
+  --surface-ink-faint: rgba(241, 230, 208, 0.46);
+
+  --paper: #2a2015;
+  --paper-raised: #352819;
+  --paper-line: rgba(241, 230, 208, 0.16);
+
+  --ink: #f1e6d0;
+  --ink-dim: rgba(241, 230, 208, 0.68);
+  --ink-faint: rgba(241, 230, 208, 0.44);
+
+  --page-bg: #1c140d;
+
+  --pin-red: #e0594a;
+  --pin-red-deep: #b8402f;
+  --twine: #d9ab52;
+  --resolved-green: #7cb17f;
+
+  --focus-ring: 0 0 0 3px rgba(224, 89, 74, 0.5);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,31 +75,45 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f5f7fa;
-  color: #2c3e50;
+  background: var(--page-bg);
+  color: var(--ink);
   line-height: 1.6;
+  font-size: 16px;
+}
+
+::selection {
+  background: var(--pin-red);
+  color: var(--paper);
+}
+
+a {
+  color: inherit;
+}
+
+button, input, textarea, select {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: 3px;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* Utility Classes */
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.text-center {
-  text-align: center;
-}
+.text-center { text-align: center; }
 
 .mt-1 { margin-top: 10px; }
 .mt-2 { margin-top: 20px; }
@@ -40,43 +123,47 @@ code {
 .mb-3 { margin-bottom: 30px; }
 
 .btn {
-  padding: 10px 20px;
+  padding: 11px 22px;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.3s ease;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
   text-decoration: none;
   display: inline-block;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--pin-red);
+  color: var(--paper);
+  box-shadow: 0 4px 0 var(--pin-red-deep), 0 6px 10px rgba(0, 0, 0, 0.25);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 0 var(--pin-red-deep), 0 9px 14px rgba(0, 0, 0, 0.3);
 }
 
 .btn-secondary {
-  background: #f0f0f0;
-  color: #2c3e50;
+  background: transparent;
+  color: var(--ink-dim);
+  border: 1.5px solid var(--paper-line);
 }
 
 .btn-secondary:hover {
-  background: #e0e0e0;
+  color: var(--ink);
+  border-color: var(--ink-faint);
 }
 
 .btn-danger {
-  background: #e74c3c;
-  color: white;
+  background: var(--pin-red-deep);
+  color: var(--paper);
 }
 
 .btn-danger:hover {
-  background: #c0392b;
+  background: var(--pin-red);
 }
 
 .loading {
@@ -84,81 +171,55 @@ code {
   justify-content: center;
   align-items: center;
   min-height: 400px;
-  font-size: 18px;
-  color: #7f8c8d;
+  font-size: 16px;
+  color: var(--ink-dim);
 }
 
 .error {
-  color: #e74c3c;
+  color: var(--pin-red);
   text-align: center;
   padding: 40px 20px;
 }
 
 .success {
-  color: #27ae60;
+  color: var(--resolved-green);
   text-align: center;
   padding: 40px 20px;
 }
 
-/* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--page-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--surface);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--surface-raised);
 }
 
-/* Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Responsive Typography */
 @media (max-width: 768px) {
-  body {
-    font-size: 14px;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  h3 {
-    font-size: 18px;
-  }
+  h1 { font-size: 24px; }
+  h2 { font-size: 20px; }
+  h3 { font-size: 18px; }
 }
 
-/* Print Styles */
 @media print {
-  .navbar,
-  .btn,
-  button {
-    display: none;
-  }
+  .navbar, .btn, button { display: none; }
 }

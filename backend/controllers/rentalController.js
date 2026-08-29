@@ -10,7 +10,8 @@ const EDITABLE_FIELDS = [
   'title',
   'description',
   'category',
-  'pricePerDay',
+  'listingType',
+  'price',
   'images',
   'condition',
   'available'
@@ -21,13 +22,14 @@ const EDITABLE_FIELDS = [
 // @access  Private (Students only)
 exports.createRentalItem = async (req, res) => {
   try {
-    const { title, description, category, pricePerDay, images, condition } = req.body;
+    const { title, description, category, listingType, price, images, condition } = req.body;
 
     const rentalItem = await RentalItem.create({
       title,
       description,
       category: category.toLowerCase(),
-      pricePerDay,
+      listingType: listingType || 'rent',
+      price,
       images: images || [],
       condition: condition || 'good',
       ownerId: req.user._id,
@@ -47,13 +49,15 @@ exports.createRentalItem = async (req, res) => {
 // @access  Private
 exports.getRentalItems = async (req, res) => {
   try {
-    const { category, available } = req.query;
+    const { category, available, listingType } = req.query;
     const query = {};
 
     if (category) query.category = category.toLowerCase();
     if (available !== undefined) query.available = available === 'true';
+    if (listingType) query.listingType = listingType;
 
     const items = await RentalItem.find(query)
+      .select('-ownerPhone')
       .sort({ createdAt: -1 })
       .populate('ownerId', 'name roomNumber');
 
@@ -68,10 +72,9 @@ exports.getRentalItems = async (req, res) => {
 // @access  Private
 exports.getRentalItem = async (req, res) => {
   try {
-    const item = await RentalItem.findById(req.params.id).populate(
-      'ownerId',
-      'name roomNumber phoneNumber email'
-    );
+    const item = await RentalItem.findById(req.params.id)
+      .select('-ownerPhone')
+      .populate('ownerId', 'name roomNumber');
 
     if (!item) return notFound(res, 'Rental item');
 

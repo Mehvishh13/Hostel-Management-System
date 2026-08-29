@@ -126,7 +126,7 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
   return (
     <div className="telegram-comments">
       <div className="comments-header">
-        <h3>💬 Discussion ({comments?.length || 0})</h3>
+        <h3>Discussion ({comments?.length || 0})</h3>
       </div>
 
       {/* Add Comment Form */}
@@ -150,7 +150,7 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
             className="send-button"
             disabled={loading || !newComment.trim()}
           >
-            {loading ? '⏳' : '📤'}
+            {loading ? '...' : 'Post'}
           </button>
         </div>
       </form>
@@ -187,21 +187,21 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
                         className={`action-btn ${userLiked ? 'active-like' : ''}`}
                         onClick={() => handleLike(comment._id, false)}
                       >
-                        👍 {comment.likeCount || 0}
+                        Like {comment.likeCount || 0}
                       </button>
                       
                       <button 
                         className={`action-btn ${userDisliked ? 'active-dislike' : ''}`}
                         onClick={() => handleDislike(comment._id, false)}
                       >
-                        👎 {comment.dislikeCount || 0}
+                        Dislike {comment.dislikeCount || 0}
                       </button>
                       
                       <button 
                         className="action-btn"
                         onClick={() => setReplyingTo(replyingTo === comment._id ? null : comment._id)}
                       >
-                        💬 Reply
+                        Reply
                       </button>
                       
                       {(isOwnMessage || currentUser.role !== 'student') && (
@@ -209,7 +209,7 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
                           className="action-btn delete-btn"
                           onClick={() => handleDelete(comment._id, false)}
                         >
-                          🗑️
+                          Delete
                         </button>
                       )}
                     </div>
@@ -250,7 +250,7 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
                         className="send-button"
                         disabled={loading || !replyText.trim()}
                       >
-                        {loading ? '⏳' : '📤'}
+                        {loading ? '...' : 'Post'}
                       </button>
                       <button 
                         onClick={() => {
@@ -300,14 +300,14 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
                                   className={`action-btn ${userLikedReply ? 'active-like' : ''}`}
                                   onClick={() => handleLike(comment._id, true, reply._id)}
                                 >
-                                  👍 {reply.likeCount || 0}
+                                  Like {reply.likeCount || 0}
                                 </button>
                                 
                                 <button 
                                   className={`action-btn ${userDislikedReply ? 'active-dislike' : ''}`}
                                   onClick={() => handleDislike(comment._id, true, reply._id)}
                                 >
-                                  👎 {reply.dislikeCount || 0}
+                                  Dislike {reply.dislikeCount || 0}
                                 </button>
                                 
                                 {(isOwnReply || currentUser.role !== 'student') && (
@@ -315,7 +315,7 @@ const TelegramComments = ({ complaintId, comments, currentUser, onUpdate }) => {
                                     className="action-btn delete-btn"
                                     onClick={() => handleDelete(comment._id, true, reply._id)}
                                   >
-                                    🗑️
+                                    Delete
                                   </button>
                                 )}
                               </div>

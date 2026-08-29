@@ -5,6 +5,18 @@ import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import './Complaints.css';
 
+const STAMP_META = {
+  pending: { label: 'Pending', mark: 'pending' },
+  'in-progress': { label: 'In progress', mark: 'progress' },
+  resolved: { label: 'Resolved', mark: 'resolved' },
+  rejected: { label: 'Rejected', mark: 'rejected' }
+};
+
+const Stamp = ({ status }) => {
+  const meta = STAMP_META[status] || STAMP_META.pending;
+  return <span className={`stamp stamp--${meta.mark}`}>{meta.label}</span>;
+};
+
 const Complaints = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +33,7 @@ const Complaints = () => {
     try {
       setError('');
       const res = await api.get('/api/complaints');
-      
+
       const complaintsData = res.data.data;
       setComplaints(Array.isArray(complaintsData) ? complaintsData : []);
     } catch (error) {
@@ -30,25 +42,6 @@ const Complaints = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getStatusColor = (status) => {
-    const colors = {
-      pending: '#f39c12',
-      'in-progress': '#3498db',
-      resolved: '#27ae60',
-      rejected: '#e74c3c'
-    };
-    return colors[status] || '#95a5a6';
-  };
-
-  const getPriorityColor = (priority) => {
-    const colors = {
-      low: '#27ae60',
-      medium: '#f39c12',
-      high: '#e74c3c'
-    };
-    return colors[priority] || '#95a5a6';
   };
 
   // Filter and sort complaints
@@ -64,7 +57,7 @@ const Complaints = () => {
   if (sortBy === 'votes') {
     filteredComplaints = filteredComplaints.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
   } else {
-    filteredComplaints = filteredComplaints.sort((a, b) => 
+    filteredComplaints = filteredComplaints.sort((a, b) =>
       new Date(b.createdAt) - new Date(a.createdAt)
     );
   }
@@ -77,7 +70,7 @@ const Complaints = () => {
     return (
       <div className="complaints-container">
         <div className="error-message">{error}</div>
-        <button onClick={fetchComplaints} className="btn-primary">
+        <button onClick={fetchComplaints} className="btn btn-primary">
           Retry
         </button>
       </div>
@@ -86,132 +79,118 @@ const Complaints = () => {
 
   return (
     <div className="complaints-container">
-      <div className="complaints-header">
-        <div>
-          <h1>All Complaints</h1>
-          <p className="subtitle">View and support community complaints</p>
-        </div>
-        {isStudent && (
-          <Link to="/complaints/new" className="btn-primary">
-            + New Complaint
-          </Link>
-        )}
-      </div>
-
-      {/* Filters and Sort */}
-      <div className="filter-sort-section">
-        <div className="filter-section">
-          <button 
-            className={filter === 'all' ? 'active' : ''} 
-            onClick={() => setFilter('all')}
-          >
-            All ({complaints.length})
-          </button>
-          {isStudent && (
-            <button 
-              className={filter === 'my-complaints' ? 'active' : ''} 
-              onClick={() => setFilter('my-complaints')}
-            >
-              My Complaints
-            </button>
-          )}
-          <button 
-            className={filter === 'pending' ? 'active' : ''} 
-            onClick={() => setFilter('pending')}
-          >
-            Pending ({complaints.filter(c => c.status === 'pending').length})
-          </button>
-          <button 
-            className={filter === 'in-progress' ? 'active' : ''} 
-            onClick={() => setFilter('in-progress')}
-          >
-            In Progress ({complaints.filter(c => c.status === 'in-progress').length})
-          </button>
-          <button 
-            className={filter === 'resolved' ? 'active' : ''} 
-            onClick={() => setFilter('resolved')}
-          >
-            Resolved ({complaints.filter(c => c.status === 'resolved').length})
-          </button>
-        </div>
-
-        <div className="sort-section">
-          <label>Sort by:</label>
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-            <option value="votes">Most Voted</option>
-            <option value="date">Most Recent</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="complaints-list">
-        {filteredComplaints.length === 0 ? (
-          <div className="no-complaints">
-            <p>No complaints found</p>
-            {isStudent && filter === 'all' && (
-              <Link to="/complaints/new" className="btn-primary" style={{ marginTop: '20px' }}>
-                Create Your First Complaint
-              </Link>
-            )}
+      <div className="container">
+        <div className="complaints-header">
+          <div>
+            <h1>All Complaints</h1>
+            <p className="subtitle">View and support community complaints</p>
           </div>
-        ) : (
-          filteredComplaints.map(complaint => (
-            <Link 
-              to={`/complaints/${complaint._id}`} 
-              key={complaint._id} 
-              className="complaint-card"
+          {isStudent && (
+            <Link to="/complaints/new" className="pin-btn">
+              + New Complaint
+            </Link>
+          )}
+        </div>
+
+        {/* Filters and Sort */}
+        <div className="filter-sort-section">
+          <div className="filter-section">
+            <button
+              className={filter === 'all' ? 'active' : ''}
+              onClick={() => setFilter('all')}
             >
-              <div className="complaint-card-header">
-                <div className="complaint-votes">
-                  <div className="vote-icon">👍</div>
-                  <div className="vote-info">
+              All ({complaints.length})
+            </button>
+            {isStudent && (
+              <button
+                className={filter === 'my-complaints' ? 'active' : ''}
+                onClick={() => setFilter('my-complaints')}
+              >
+                My Complaints
+              </button>
+            )}
+            <button
+              className={filter === 'pending' ? 'active' : ''}
+              onClick={() => setFilter('pending')}
+            >
+              Pending ({complaints.filter(c => c.status === 'pending').length})
+            </button>
+            <button
+              className={filter === 'in-progress' ? 'active' : ''}
+              onClick={() => setFilter('in-progress')}
+            >
+              In Progress ({complaints.filter(c => c.status === 'in-progress').length})
+            </button>
+            <button
+              className={filter === 'resolved' ? 'active' : ''}
+              onClick={() => setFilter('resolved')}
+            >
+              Resolved ({complaints.filter(c => c.status === 'resolved').length})
+            </button>
+          </div>
+
+          <div className="sort-section">
+            <label>Sort by:</label>
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <option value="votes">Most Voted</option>
+              <option value="date">Most Recent</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="complaints-list">
+          {filteredComplaints.length === 0 ? (
+            <div className="card no-complaints">
+              <p>No complaints found</p>
+              {isStudent && filter === 'all' && (
+                <Link to="/complaints/new" className="pin-btn" style={{ marginTop: '20px' }}>
+                  Create Your First Complaint
+                </Link>
+              )}
+            </div>
+          ) : (
+            filteredComplaints.map(complaint => (
+              <Link
+                to={`/complaints/${complaint._id}`}
+                key={complaint._id}
+                className="card complaint-card"
+              >
+                <div className="complaint-card-header">
+                  <div className="complaint-votes">
                     <strong>{complaint.voteCount || 0}</strong>
                     <span>votes</span>
                   </div>
-                </div>
-                
-                <div className="complaint-main-content">
-                  <div className="complaint-header-row">
-                    <h3>{complaint.title}</h3>
-                    <span 
-                      className="status-badge" 
-                      style={{ backgroundColor: getStatusColor(complaint.status) }}
-                    >
-                      {complaint.status}
-                    </span>
-                  </div>
-                  
-                  <p className="complaint-description">
-                    {complaint.description.substring(0, 150)}
-                    {complaint.description.length > 150 ? '...' : ''}
-                  </p>
-                  
-                  <div className="complaint-meta">
-                    <span className="meta-item">
-                      👤 {complaint.studentId?.name}
-                    </span>
-                    <span className="meta-item">
-                      🏠 Room {complaint.roomNumber}
-                    </span>
-                    <span className="category">{complaint.category}</span>
-                    <span 
-                      className="priority" 
-                      style={{ color: getPriorityColor(complaint.priority) }}
-                    >
-                      {complaint.priority} priority
-                    </span>
-                    <span className="meta-item">
-                      💬 {complaint.commentCount || 0} comments
-                    </span>
-                    <span className="date">
-                      📅 {new Date(complaint.createdAt).toLocaleDateString()}
-                    </span>
+
+                  <div className="complaint-main-content">
+                    <div className="complaint-header-row">
+                      <h3>{complaint.title}</h3>
+                      <Stamp status={complaint.status} />
+                    </div>
+
+                    <p className="complaint-description">
+                      {complaint.description.substring(0, 150)}
+                      {complaint.description.length > 150 ? '...' : ''}
+                    </p>
+
+                    <div className="complaint-meta">
+                      <span className="meta-item">{complaint.studentId?.name || 'Anonymous'}</span>
+                      <span className="sep">·</span>
+                      <span className="tag-label">{complaint.category}</span>
+                      <span className="sep">·</span>
+                      <span className={`priority priority--${complaint.priority}`}>
+                        {complaint.priority}
+                      </span>
+                      <span className="sep">·</span>
+                      <span className="meta-item">{complaint.commentCount || 0} comments</span>
+                      <span className="sep">·</span>
+                      <span className="date">{new Date(complaint.createdAt).toLocaleDateString()}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))
-        )}
+              </Link>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

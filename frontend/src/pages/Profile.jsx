@@ -83,10 +83,10 @@ const Profile = () => {
         <div className="profile-info">
           <h1>{user.name}</h1>
           <div className="profile-meta">
-            <span>📧 {user.email}</span>
-            <span>📱 {user.phoneNumber || user.phone}</span>
-            {user.role === 'student' && <span>🚪 Room {user.roomNumber}</span>}
-            <span>👤 {user.role}</span>
+            <span>{user.email}</span>
+            <span>{user.phoneNumber || user.phone}</span>
+            {user.role === 'student' && <span>Room {user.roomNumber}</span>}
+            <span>{user.role}</span>
           </div>
         </div>
       </div>
@@ -167,7 +167,6 @@ const Profile = () => {
             </div>
             {complaints.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-state-icon">📝</div>
                 <p>No complaints yet</p>
                 <Link to="/complaints" style={styles.primaryBtn}>File a Complaint</Link>
               </div>
@@ -181,8 +180,8 @@ const Profile = () => {
                     </div>
                     <p style={styles.cardDescription}>{complaint.description}</p>
                     <div style={styles.cardFooter}>
-                      <span>📂 {complaint.category}</span>
-                      <span>📅 {new Date(complaint.createdAt).toLocaleDateString()}</span>
+                      <span>{complaint.category}</span>
+                      <span>{new Date(complaint.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                 ))}
@@ -199,7 +198,6 @@ const Profile = () => {
             </div>
             {items.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-state-icon">📦</div>
                 <p>No items listed yet</p>
                 <Link to="/marketplace/add" style={styles.primaryBtn}>List an Item</Link>
               </div>
@@ -216,15 +214,17 @@ const Profile = () => {
                         {item.images && item.images[0] ? (
                           <img src={item.images[0]} alt={item.title} style={styles.img} />
                         ) : (
-                          <div style={styles.noImage}>📦</div>
+                          <div style={styles.noImage}>No image</div>
                         )}
                       </div>
                       <div style={styles.itemInfo}>
                         <h3>{item.title}</h3>
-                        <p style={styles.itemPrice}>₹{item.pricePerDay}/day</p>
+                        <p style={styles.itemPrice}>
+                          ₹{item.price}{item.listingType !== 'sale' && '/day'}
+                        </p>
                         <div style={styles.itemMeta}>
-                          <span>{item.available ? '✅ Available' : '❌ Unavailable'}</span>
-                          <span>👁️ {item.views || 0} views</span>
+                          <span>{item.available ? 'Available' : (item.listingType === 'sale' ? 'Sold' : 'Unavailable')}</span>
+                          <span>{item.views || 0} views</span>
                         </div>
                       </div>
                     </div>
@@ -243,7 +243,6 @@ const Profile = () => {
             </div>
             {groups.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-state-icon">👥</div>
                 <p>No groups joined yet</p>
                 <Link to="/groups" style={styles.primaryBtn}>Browse Groups</Link>
               </div>
@@ -261,8 +260,8 @@ const Profile = () => {
                     </div>
                     <p style={styles.cardDescription}>{group.description}</p>
                     <div style={styles.cardFooter}>
-                      <span>👥 {group.members?.length || 0} members</span>
-                      <span>{group.privacy === 'private' ? '🔒 Private' : '🌐 Public'}</span>
+                      <span>{group.members?.length || 0} members</span>
+                      <span>{group.privacy === 'private' ? 'Private' : 'Public'}</span>
                     </div>
                   </Link>
                 ))}

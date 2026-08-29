@@ -1,47 +1,48 @@
-/* components/TelegramComments.css - TELEGRAM STYLE */
+/* components/TelegramComments.css — The Notice Board
+   Scoped under .telegram-comments to match ComplaintDetail/Groups theme. */
 
 .telegram-comments {
-  background: #f5f5f5;
-  border-radius: 12px;
+  background: var(--paper);
+  border: 1px solid var(--paper-line);
   padding: 0;
   margin-top: 30px;
 }
 
 .comments-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 20px;
-  border-radius: 12px 12px 0 0;
+  background: var(--paper-raised);
+  color: var(--ink);
+  padding: 18px 20px;
+  border-bottom: 1px dashed var(--paper-line);
   margin: 0;
 }
 
 .comments-header h3 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 17px;
 }
 
 /* Input Container */
 .telegram-input-container {
-  background: white;
+  background: var(--paper);
   padding: 15px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--paper-line);
 }
 
 .telegram-input-wrapper {
   display: flex;
   gap: 10px;
   align-items: flex-end;
-  background: #f8f9fa;
-  border-radius: 20px;
+  background: var(--paper-raised);
+  border-radius: 0;
   padding: 10px 15px;
-  border: 2px solid #e0e0e0;
-  transition: all 0.3s ease;
+  border: 1.5px solid var(--paper-line);
+  transition: border-color 0.15s ease;
 }
 
 .telegram-input-wrapper:focus-within {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--pin-red);
 }
 
 .telegram-input-wrapper textarea {
@@ -50,7 +51,8 @@
   background: transparent;
   resize: none;
   font-size: 15px;
-  font-family: inherit;
+  font-family: var(--font-body);
+  color: var(--ink);
   padding: 5px 0;
   max-height: 120px;
   overflow-y: auto;
@@ -61,23 +63,25 @@
 }
 
 .send-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--pin-red);
+  color: var(--paper);
   border: none;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+  padding: 8px 16px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: opacity 0.15s ease;
   flex-shrink: 0;
 }
 
 .send-button:hover:not(:disabled) {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  opacity: 0.85;
 }
 
 .send-button:disabled {
@@ -86,31 +90,31 @@
 }
 
 .cancel-button {
-  background: #e0e0e0;
-  border: none;
-  width: 32px;
-  height: 32px;
+  background: transparent;
+  border: 1.5px solid var(--paper-line);
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  color: #666;
+  transition: border-color 0.15s ease;
+  color: var(--ink-dim);
 }
 
 .cancel-button:hover {
-  background: #d0d0d0;
+  border-color: var(--ink-faint);
+  color: var(--ink);
 }
 
 /* Messages Container */
 .telegram-messages {
-  background: white;
+  background: var(--paper);
   padding: 20px;
   max-height: 600px;
   overflow-y: auto;
-  border-radius: 0 0 12px 12px;
 }
 
 .telegram-messages::-webkit-scrollbar {
@@ -118,13 +122,11 @@
 }
 
 .telegram-messages::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+  background: var(--paper-raised);
 }
 
 .telegram-messages::-webkit-scrollbar-thumb {
-  background: #667eea;
-  border-radius: 10px;
+  background: var(--paper-line);
 }
 
 .comment-thread {
@@ -135,18 +137,6 @@
 .telegram-message {
   display: flex;
   margin-bottom: 12px;
-  animation: messageSlideIn 0.3s ease-out;
-}
-
-@keyframes messageSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .telegram-message.own-message {
@@ -159,25 +149,18 @@
 
 .message-bubble {
   max-width: 70%;
-  background: white;
-  border-radius: 12px;
+  background: var(--paper-raised);
+  border: 1px solid var(--paper-line);
   padding: 12px 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-}
-
-.message-bubble:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .own-message .message-bubble {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--paper);
+  border-color: var(--ink-faint);
 }
 
 .other-message .message-bubble {
-  background: #f0f2f5;
-  color: #2c3e50;
+  background: var(--paper-raised);
 }
 
 /* Message Header */
@@ -186,7 +169,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
-  font-size: 13px;
+  font-size: 12px;
+  gap: 10px;
 }
 
 .message-author {
@@ -194,72 +178,38 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.own-message .message-author {
-  color: rgba(255, 255, 255, 0.95);
-}
-
-.other-message .message-author {
-  color: #2c3e50;
+  color: var(--ink);
 }
 
 .role-badge {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 10px;
+  font-size: 9px;
+  padding: 2px 7px;
+  border: 1px solid currentColor;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
 }
 
-.own-message .role-badge {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-}
-
-.badge-student {
-  background: rgba(33, 150, 243, 0.15);
-  color: #1976d2;
-}
-
-.badge-admin {
-  background: rgba(244, 67, 54, 0.15);
-  color: #c62828;
-}
-
-.badge-warden {
-  background: rgba(156, 39, 176, 0.15);
-  color: #7b1fa2;
-}
-
-.own-message .badge-student,
-.own-message .badge-admin,
-.own-message .badge-warden {
-  background: rgba(255, 255, 255, 0.25);
-  color: white;
-}
+.badge-student { color: var(--ink-dim); }
+.badge-admin { color: var(--pin-red); }
+.badge-warden { color: var(--twine); }
 
 .message-time {
+  font-family: var(--font-mono);
   font-size: 11px;
-  opacity: 0.7;
+  color: var(--ink-faint);
+  white-space: nowrap;
 }
 
 /* Message Text */
 .message-text {
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 14.5px;
+  line-height: 1.6;
   word-wrap: break-word;
   white-space: pre-wrap;
   margin-bottom: 8px;
-}
-
-.own-message .message-text {
-  color: white;
-}
-
-.other-message .message-text {
-  color: #2c3e50;
+  color: var(--ink);
 }
 
 /* Message Actions */
@@ -269,87 +219,66 @@
   flex-wrap: wrap;
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.own-message .message-actions {
-  border-top-color: rgba(255, 255, 255, 0.2);
+  border-top: 1px dashed var(--paper-line);
 }
 
 .action-btn {
-  background: rgba(0, 0, 0, 0.05);
-  border: none;
+  background: transparent;
+  border: 1px solid var(--paper-line);
   padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
+  font-size: 11.5px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease, color 0.15s ease;
   font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--ink-dim);
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.own-message .action-btn {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-}
-
-.other-message .action-btn {
-  background: rgba(0, 0, 0, 0.05);
-  color: #666;
-}
-
 .action-btn:hover {
-  transform: scale(1.05);
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.own-message .action-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  border-color: var(--ink-faint);
+  color: var(--ink);
 }
 
 .action-btn.active-like {
-  background: #4CAF50 !important;
-  color: white !important;
+  background: var(--resolved-green);
+  color: var(--paper);
+  border-color: var(--resolved-green);
 }
 
 .action-btn.active-dislike {
-  background: #f44336 !important;
-  color: white !important;
+  background: var(--pin-red);
+  color: var(--paper);
+  border-color: var(--pin-red);
 }
 
 .delete-btn:hover {
-  background: #f44336 !important;
-  color: white !important;
+  background: var(--pin-red);
+  color: var(--paper);
+  border-color: var(--pin-red);
 }
 
 .show-replies-btn {
-  background: rgba(102, 126, 234, 0.1);
+  background: transparent;
   border: none;
-  padding: 6px 12px;
-  border-radius: 12px;
+  padding: 6px 0;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   margin-top: 8px;
-  color: #667eea;
-  transition: all 0.2s ease;
-}
-
-.own-message .show-replies-btn {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: var(--twine);
+  font-family: var(--font-mono);
 }
 
 .show-replies-btn:hover {
-  background: rgba(102, 126, 234, 0.2);
-  transform: translateX(2px);
+  text-decoration: underline;
 }
 
 /* Reply Container */
 .reply-input-container {
-  margin-left: 40px;
+  margin-left: 30px;
   margin-top: 10px;
   margin-bottom: 15px;
   display: flex;
@@ -357,9 +286,8 @@
 }
 
 .reply-line {
-  width: 3px;
-  background: linear-gradient(to bottom, #667eea, transparent);
-  border-radius: 2px;
+  width: 2px;
+  background: var(--paper-line);
   margin-right: 10px;
 }
 
@@ -368,10 +296,9 @@
   display: flex;
   gap: 8px;
   align-items: flex-end;
-  background: #f8f9fa;
-  border-radius: 16px;
+  background: var(--paper-raised);
   padding: 8px 12px;
-  border: 2px solid #e0e0e0;
+  border: 1.5px solid var(--paper-line);
 }
 
 .reply-input-wrapper textarea {
@@ -380,7 +307,8 @@
   background: transparent;
   resize: none;
   font-size: 14px;
-  font-family: inherit;
+  font-family: var(--font-body);
+  color: var(--ink);
   padding: 4px 0;
   max-height: 80px;
   overflow-y: auto;
@@ -392,7 +320,7 @@
 
 /* Replies Container */
 .replies-container {
-  margin-left: 40px;
+  margin-left: 30px;
   margin-top: 10px;
   display: flex;
   gap: 10px;
@@ -414,12 +342,13 @@
 .no-messages {
   text-align: center;
   padding: 60px 20px;
-  color: #95a5a6;
+  color: var(--ink-faint);
 }
 
 .no-messages p {
   margin: 0;
-  font-size: 15px;
+  font-size: 14.5px;
+  font-family: var(--font-body);
 }
 
 /* Responsive Design */
@@ -434,7 +363,7 @@
 
   .replies-container,
   .reply-input-container {
-    margin-left: 20px;
+    margin-left: 16px;
   }
 
   .message-actions {
@@ -449,29 +378,4 @@
   .telegram-messages {
     max-height: 400px;
   }
-}
-
-/* Smooth Animations */
-.message-bubble {
-  animation: bubbleIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-@keyframes bubbleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Selection Colors */
-.own-message ::selection {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.other-message ::selection {
-  background: rgba(102, 126, 234, 0.2);
 }
